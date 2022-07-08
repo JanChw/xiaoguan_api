@@ -22,3 +22,21 @@ model user {
 
   @@map("users")
 }
+
+// 规格 价格
+model food {
+  id Int @id @unique @default(autoincrement())
+  imgUrl String
+  desc String @default("")
+  detail String @default("")
+  saleType SaleType @default(OFFLINE)
+
+  @@map("foods")
+}
+
+
+enum SaleType {
+  OFFLINE
+  ONLINE
+  BOTH
+}
