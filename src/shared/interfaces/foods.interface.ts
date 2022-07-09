@@ -1,5 +1,5 @@
 import { SaleType } from '../enums/food.enum'
-
+import { Spec } from './specs.interface'
 export interface Food {
   imgUrl: string;
 
@@ -8,6 +8,7 @@ export interface Food {
   desc: string;
 
   detail: string;
+  specs: Spec[]
 
   originPrice?: number;
 

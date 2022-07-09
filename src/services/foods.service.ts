@@ -6,12 +6,17 @@ import { isEmpty } from '@utils/util'
 
 export default class FoodService {
   public async findAllFoods () :Promise<Food[]> {
-    const foods: Food[] = await db.food.findMany()
+    const foods: Food[] = await db.food.findMany({
+      include: { specs: true }
+    })
     return foods
   }
 
   public async findFoodById (foodId: number): Promise<Food> {
-    const food: Food = await db.food.findFirst({ where: { id: foodId } })
+    const food: Food = await db.food.findFirst({
+      where: { id: foodId },
+      include: { specs: true }
+    })
     if (!food) throw new HttpException(409, 'the food not exists')
 
     return food
@@ -23,7 +28,11 @@ export default class FoodService {
     const food: Food = await db.food.findFirst({ where: { name: foodData.name } })
     if (food) throw new HttpException(409, `Your ${foodData.name} already exists`)
 
-    const createFoodData: Food = await db.food.create({ data: foodData })
+    const { specs, ..._foodData } = foodData
+    const _foodDataWithSpecs = Object.assign(_foodData, { specs: { create: specs } })
+    const data = (!specs || !specs.length) ? _foodData : _foodDataWithSpecs
+
+    const createFoodData: Food = await db.food.create({ data })
 
     return createFoodData
   }

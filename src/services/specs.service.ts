@@ -6,12 +6,17 @@ import db from '../db'
 
 class SpecService {
   public async findAllSpecs (): Promise<Spec[]> {
-    const specs: Spec[] = await db.spec.findMany()
+    const specs: Spec[] = await db.spec.findMany({
+      include: { food: true }
+    })
     return specs
   }
 
   public async findSpecById (specId: number): Promise<Spec> {
-    const findSpec: Spec = await db.spec.findFirst({ where: { id: userId } })
+    const findSpec: Spec = await db.spec.findFirst({
+      where: { id: specId },
+      include: { food: true }
+    })
     if (!findSpec) throw new HttpException(409, "You're not spec")
 
     return findSpec

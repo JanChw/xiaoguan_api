@@ -1,5 +1,5 @@
 import { IsOptional, IsString } from 'class-validator'
-// import { SaleType } from '../enums/food.enum'
+import { Spec } from '../interfaces/specs.interface'
 export class CreateFoodDto {
   @IsString()
   public imgUrl: string;
@@ -13,14 +13,8 @@ export class CreateFoodDto {
   @IsString()
   public detail: string;
 
-  // @IsNumber()
-  // public originPrice?: number;
-
-  // @IsBoolean()
-  // public isPublished?: boolean;
-
-  // @IsIn([0, 1, 2])
-  // public saleType?: SaleType
+  @IsOptional()
+  public specs: Spec[];
 }
 
 export class UpdateFoodPartialDto {
