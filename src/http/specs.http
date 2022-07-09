@@ -1,0 +1,34 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All foods
+GET {{ baseURL }}/specs
+
+###
+# Find food By Id
+GET {{ baseURL }}/specs/1
+
+###
+# Create food
+POST {{ baseURL }}/specs
+Content-Type: application/json
+
+{
+  "foodId": 1,
+  "name": "小份",
+	"price": 13
+}
+
+###
+# Modify food By Id
+PUT {{ baseURL }}/specs/1
+Content-Type: application/json
+
+{
+  "price": 13.5
+}
+
+###
+# Delete food By Id
+DELETE {{ baseURL }}/specs/1

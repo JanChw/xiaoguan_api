@@ -15,7 +15,7 @@ POST {{ baseURL }}/foods
 Content-Type: application/json
 
 {
-  "name": "蒸肉",
+  "name": "蒸排骨",
 	"imgUrl": "http://localhost:8080/food/xx.png",
   "desc": "蒸菜",
   "detail": "老少皆宜，可口美味"
@@ -27,7 +27,7 @@ PUT {{ baseURL }}/foods/1
 Content-Type: application/json
 
 {
-  "name": "粉蒸肉"
+  "name": "蒸肉"
 }
 
 ###

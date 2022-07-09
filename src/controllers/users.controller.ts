@@ -2,12 +2,12 @@ import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } 
 import { OpenAPI } from 'routing-controllers-openapi'
 import { CreateUserDto, UpdateUserPartialDto } from '@/shared/dtos/users.dto'
 import { User } from '@/shared/interfaces/users.interface'
-import userService from '@services/users.service'
+import UserService from '@services/users.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
 
 @Controller()
 export class UsersController {
-  public userService = new userService();
+  public userService = new UserService();
 
   @Get('/users')
   @OpenAPI({ summary: 'Return a list of users' })
