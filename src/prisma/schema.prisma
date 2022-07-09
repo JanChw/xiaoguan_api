@@ -26,14 +26,28 @@ model user {
 // 规格 价格
 model food {
   id Int @id @unique @default(autoincrement())
+  name String @unique
   imgUrl String
   desc String @default("")
   detail String @default("")
-  saleType SaleType @default(OFFLINE)
+  originPrice Float?
+  isPublished Boolean? @default(false)
+  saleType SaleType? @default(OFFLINE)
+  specs spec[]
 
   @@map("foods")
 }
 
+//食品规格表
+model spec {
+  id Int @id @unique @default(autoincrement())
+  name String
+  price Float
+  food food @relation(fields: [foodId], references: [id])
+  foodId Int
+
+  @@map("specs")
+}
 
 enum SaleType {
   OFFLINE

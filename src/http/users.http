@@ -21,12 +21,11 @@ Content-Type: application/json
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/users/1
+PUT {{ baseURL }}/users/6
 Content-Type: application/json
 
 {
-    "email": "example@email.com",
-	"password": "password123"
+	"password": "password345"
 }
 
 ###

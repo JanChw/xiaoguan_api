@@ -25,3 +25,5 @@ Content-Type: application/json
 # User Logout
 POST {{ baseURL }}/logout
 Content-Type: application/json
+
+

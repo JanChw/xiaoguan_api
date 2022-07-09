@@ -1,14 +1,11 @@
 import { hash } from 'bcrypt'
-import { CreateUserDto } from '@/shared/dtos/users.dto'
+import { CreateUserDto, UpdateUserPartialDto } from '@/shared/dtos/users.dto'
 import { HttpException } from '@exceptions/HttpException'
 import { User } from '@/shared/interfaces/users.interface'
-import userModel from '@models/users.model'
 import { isEmpty } from '@utils/util'
 import db from '../db'
 
 class UserService {
-  public users = userModel;
-
   public async findAllUser (): Promise<User[]> {
     const users: User[] = await db.user.findMany()
     return users
@@ -34,16 +31,20 @@ class UserService {
     return createUserData
   }
 
-  public async updateUser (userId: number, userData: CreateUserDto): Promise<User[]> {
+  public async updateUser (userId: number, userData: UpdateUserPartialDto): Promise<User[]> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
 
     const findUser: User = await db.user.findUnique({ where: { id: userId } })
     if (!findUser) throw new HttpException(409, "You're not user")
 
-    const hashedPassword = await hash(userData.password, 10)
+    if (userData.password) {
+      const hashedPassword = await hash(userData.password, 10)
+      userData.password = hashedPassword
+    }
+
     const updateUserData: User[] = await db.user.update({
       where: { id: userId },
-      data: { password: hashedPassword }
+      data: userData
     })
 
     return updateUserData

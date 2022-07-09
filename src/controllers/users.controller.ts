@@ -1,6 +1,6 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { CreateUserDto } from '@/shared/dtos/users.dto'
+import { CreateUserDto, UpdateUserPartialDto } from '@/shared/dtos/users.dto'
 import { User } from '@/shared/interfaces/users.interface'
 import userService from '@services/users.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
@@ -33,9 +33,9 @@ export class UsersController {
   }
 
   @Put('/users/:id')
-  @UseBefore(validationMiddleware(CreateUserDto, 'body', true))
+  @UseBefore(validationMiddleware(UpdateUserPartialDto, 'body', true))
   @OpenAPI({ summary: 'Update a user' })
-  async updateUser (@Param('id') userId: number, @Body() userData: CreateUserDto) {
+  async updateUser (@Param('id') userId: number, @Body() userData: UpdateUserPartialDto) {
     const updateUserData: User[] = await this.userService.updateUser(userId, userData)
     return { data: updateUserData, message: 'updated' }
   }

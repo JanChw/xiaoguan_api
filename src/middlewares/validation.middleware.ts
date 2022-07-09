@@ -24,6 +24,7 @@ export const validationMiddleware = (
         const message = errors.map(getAllNestedErrors).join(', ')
         next(new HttpException(400, message))
       } else {
+        console.log('-----------------')
         next()
       }
     })
