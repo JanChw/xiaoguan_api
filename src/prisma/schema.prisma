@@ -23,7 +23,7 @@ model user {
   @@map("users")
 }
 
-// 规格 价格
+//===========食品=====================
 model food {
   id Int @id @unique @default(autoincrement())
   name String @unique
@@ -38,7 +38,6 @@ model food {
   @@map("foods")
 }
 
-//食品规格表
 model spec {
   id Int @id @unique @default(autoincrement())
   name String
@@ -48,9 +47,64 @@ model spec {
 
   @@map("specs")
 }
+//===========食品===================
+
+//===========文件管理================
+model bucket {
+  id Int @id @unique @default(autoincrement())
+  name String @unique
+  files file[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("buckets")
+}
+
+model file {
+  id Int @id @unique @default(autoincrement())
+  filename String @unique
+  originName String
+  title String @default("")
+  desc String @default("")
+  url String
+  link String @default("")
+  fileType Media @map("file_type")
+  bucket bucket @relation(fields: [bucketId], references: [id])
+  bucketId Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @map("updated_at")
+
+  @@map("files")
+}
+//===========文件管理==================
+
+//===========服务======================
+//TODO:关联员工表
+model service {
+  id Int @id @unique @default(autoincrement())
+  name String
+  image String @default("")
+  phoneNumber String @map("phone_number")
+  price Float @default(0.0)
+  desc String @default("")
+  remark String @default("")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @map("updated_at")
+
+  @@map("services")
+}
+//===========服务======================
+
 
 enum SaleType {
   OFFLINE
   ONLINE
   BOTH
+}
+
+enum Media {
+  IMAGE
+  VEDIO
+  AUDIO
+  TEXT
 }

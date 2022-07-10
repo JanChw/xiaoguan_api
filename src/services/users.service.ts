@@ -26,6 +26,7 @@ class UserService {
 
     const hashedPassword = await hash(userData.password, 10)
     userData.password = hashedPassword
+
     const createUserData: User = await db.user.create({ data: userData })
 
     return createUserData

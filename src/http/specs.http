@@ -16,8 +16,8 @@ Content-Type: application/json
 
 {
   "foodId": 1,
-  "name": "小份",
-	"price": 13
+  "name": "大份",
+	"price": 15
 }
 
 ###

@@ -8,7 +8,8 @@ export interface Food {
   desc: string;
 
   detail: string;
-  specs: Spec[]
+
+  specs?: Spec[];
 
   originPrice?: number;
 
