@@ -1,0 +1,7 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All services
+GET {{ baseURL }}/services
+

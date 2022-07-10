@@ -15,9 +15,9 @@ POST {{ baseURL }}/buckets
 Content-Type: application/json
 
 {
- "name": "xiaoguan"
+ "name": "test"
 }
 
 ###
 # Delete food By Id
-DELETE {{ baseURL }}/buckets/xiaoguan
+DELETE {{ baseURL }}/buckets/test
