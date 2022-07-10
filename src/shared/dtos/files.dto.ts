@@ -1,5 +1,5 @@
 import { Media } from '@/shared/enums/files.enum'
-import { IsIn, IsOptional, IsString } from 'class-validator'
+import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateFileDto {
   @IsString()
@@ -8,11 +8,14 @@ export class CreateFileDto {
   @IsString()
   public originName: string;
 
-  @IsIn([0, 1, 2, 3])
+  @IsIn(['IMAGE', 'VEDIO', 'AUDIO', 'TEXT'])
   public fileType: Media;
 
   @IsString()
   public url: string;
+
+  @IsNumber()
+  public bucketId: number;
 
   @IsString()
   @IsOptional()

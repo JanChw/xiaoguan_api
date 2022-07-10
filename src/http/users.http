@@ -15,7 +15,7 @@ POST {{ baseURL }}/users
 Content-Type: application/json
 
 {
-    "email": "example3@email.com",
+    "email": "example9@email.com",
 	"password": "password"
 }
 

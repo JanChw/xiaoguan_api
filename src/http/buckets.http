@@ -19,14 +19,5 @@ Content-Type: application/json
 }
 
 ###
-# Modify food By Id
-PUT {{ baseURL }}/foods/1
-Content-Type: application/json
-
-{
-  "name": "蒸肉"
-}
-
-###
 # Delete food By Id
-DELETE {{ baseURL }}/foods/1
+DELETE {{ baseURL }}/buckets/xiaoguan

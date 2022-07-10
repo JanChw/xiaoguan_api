@@ -17,11 +17,12 @@ export class FileService {
   }
 
   // TODO:上传文件
-  async uploadFiles (bucketName: String, files: CreateFileDto[]): Promise<File[]> {
-    if (isEmpty(bucketName) && isEmpty(files)) throw new HttpException(400, 'bucketName和filenames都不能为空')
-
-    const _bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketName } })
-    if (!_bucket) throw new HttpException(409, `${bucketName} 不存在`)
+  async uploadFiles (files: CreateFileDto[]): Promise<File[]> {
+    if (isEmpty(files)) throw new HttpException(400, 'bucketName和filenames都不能为空')
+    console.log(files)
+    const bucketId = files[0].bucketId
+    const _bucket: Bucket = await db.bucket.findFirst({ where: { id: bucketId } })
+    if (!_bucket) throw new HttpException(409, `${_bucket.name} 不存在`)
 
     const _files: File[] = await db.file.createMany({ data: files, skipDuplicates: true })
 
@@ -34,7 +35,7 @@ export class FileService {
     const _bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketName } })
     if (!_bucket) throw new HttpException(409, `${bucketName} 不存在`)
 
-    const files: File[] = await db.file.deleteMany({ where: { id: fileIds } })
+    const files: File[] = await db.file.deleteMany({ where: { id: { in: fileIds } } })
     return files
   }
 }

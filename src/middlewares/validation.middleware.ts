@@ -15,16 +15,16 @@ export const validationMiddleware = (
   value: string | 'body' | 'query' | 'params' = 'body',
   skipMissingProperties = false,
   whitelist = true,
-  forbidNonWhitelisted = true
+  forbidNonWhitelisted = false
 ): RequestHandler => {
   return (req, res, next) => {
     const obj = plainToClass(type, req[value])
     validate(obj, { skipMissingProperties, whitelist, forbidNonWhitelisted }).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
+        console.log(errors)
         const message = errors.map(getAllNestedErrors).join(', ')
         next(new HttpException(400, message))
       } else {
-        console.log('-----------------')
         next()
       }
     })

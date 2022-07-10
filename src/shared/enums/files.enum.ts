@@ -1,6 +1,6 @@
 export enum Media {
-  IMAGE,
-  VEDIO,
-  AUDIO,
-  TEXT
+  IMAGE='IMAGE',
+  VEDIO='VEDIO',
+  AUDIO='AUDIO',
+  TEXT='TEXT'
 }

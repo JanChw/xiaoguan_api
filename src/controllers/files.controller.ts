@@ -2,7 +2,7 @@ import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { FileService } from '@/services/files.service'
 import { CreateFileDto } from '@/shared/dtos/files.dto'
 import { File } from '@/shared/interfaces/files.interface'
-import { Controller, Delete, Get, HttpCode, Param, Post, UseBefore } from 'routing-controllers'
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
 @Controller()
@@ -16,18 +16,23 @@ export class FilesController {
     return { data: files, message: 'find files' }
   }
 
-  @Post('/files/:bucketName')
+  @Post('/files')
   @HttpCode(201)
   @UseBefore(validationMiddleware(CreateFileDto, 'body'))
   @OpenAPI({ summary: 'Upload many files' })
-  async uploadFilesWithBucket (@Param('bucketName') bucketName: string, files: CreateFileDto[]) {
-    const _files: File[] = await this.fileService.uploadFiles(bucketName, files)
+  async uploadFilesWithBucket (@Body() files: CreateFileDto[]) {
+    console.log('==================')
+    console.log(files)
+    console.log('-------------------------')
+    console.log('==================')
+    const _files: File[] = await this.fileService.uploadFiles(files)
     return { data: _files, message: 'upload files' }
   }
 
-  @Delete('/files/:bucketName')
+  @Delete('/files')
   @OpenAPI({ summary: 'Delete many files' })
-  async removeFilesWithBucket (@Param('bucketName') bucketName: string, fileIds: number[]) {
+  async removeFilesWithBucket (@Body() delsInfo) {
+    const { bucketName, fileIds } = delsInfo
     const files: File[] = await this.fileService.removeFiles(bucketName, fileIds)
     return { data: files, message: 'remove files' }
   }
