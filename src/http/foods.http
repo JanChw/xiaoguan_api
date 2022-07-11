@@ -15,17 +15,10 @@ POST {{ baseURL }}/foods
 Content-Type: application/json
 
 {
-  "name": "蒸藕",
+  "name": "莲子汤",
 	"imgUrl": "http://localhost:8080/food/xx.png",
-  "desc": "蒸菜",
-  "detail": "老少皆宜，可口美味",
-  "specs": [{
-    "name": "小份",
-    "price": 9
-  },{
-     "name": "大份",
-    "price": 11
-  }]
+  "desc": "汤类",
+  "detail": "老少皆宜，可口美味"
 }
 
 ###
@@ -34,9 +27,9 @@ PUT {{ baseURL }}/foods/1
 Content-Type: application/json
 
 {
-  "name": "蒸肉"
+  "desc": "蒸肉"
 }
 
 ###
 # Delete food By Id
-DELETE {{ baseURL }}/foods/1
+DELETE {{ baseURL }}/foods/7

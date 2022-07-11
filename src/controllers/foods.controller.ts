@@ -1,6 +1,6 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { CreateFoodDto, UpdateFoodPartialDto } from '@/shared/dtos/foods.dto'
+import { CreateFoodDto } from '@/shared/dtos/foods.dto'
 import { Food } from '@/shared/interfaces/foods.interface'
 import FoodService from '@services/foods.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
@@ -12,40 +12,45 @@ export class FoodsController {
   @Get('/foods')
   @OpenAPI({ summary: 'Return a list of foods' })
   async getFoods () {
-    const findAllFoods: Food[] = await this.foodService.findAllFoods()
-    return { data: findAllFoods, message: 'findAll' }
+    // const findAllFoods: Food[] = await this.foodService.findAllFoods()
+    const foods: Food[] = await this.foodService.getAll({
+      include: { specs: true }
+    })
+    return { data: foods, message: 'findAll' }
   }
 
   @Get('/foods/:id')
   @OpenAPI({ summary: 'Return find a food' })
-  async getFoodById (@Param('id') foodId: number) {
-    const food: Food = await this.foodService.findFoodById(foodId)
+  async getFoodById (@Param('id') id: number) {
+    // const food: Food = await this.foodService.findFoodById(foodId)
+    const food: Food = await this.foodService.getOneById(id, {
+      include: { specs: true }
+    })
     return { data: food, message: 'findOne' }
   }
 
   @Post('/foods')
   @HttpCode(201)
   @UseBefore(validationMiddleware(CreateFoodDto, 'body'))
-  @OpenAPI({ summary: 'Create a new user' })
-  async createUser (@Body() food: CreateFoodDto) {
-    const createFoodData: Food = await this.foodService.createFood(food)
-    return { data: createFoodData, message: 'created' }
+  @OpenAPI({ summary: 'Create a new Food' })
+  async createUser (@Body() foodData: CreateFoodDto) {
+    const food: Food = await this.foodService.createFood(foodData)
+    return { data: food, message: 'created' }
   }
 
   @Put('/foods/:id')
-  @UseBefore(validationMiddleware(UpdateFoodPartialDto, 'body', true))
+  @UseBefore(validationMiddleware(CreateFoodDto, 'body', true))
   @OpenAPI({ summary: 'Update a food' })
-  async updateFood (@Param('id') foodId: number, @Body() foodData: UpdateFoodPartialDto) {
-    console.log('=======================')
-    console.log(foodData)
-    const updateFoodData: Food[] = await this.foodService.updateFood(foodId, foodData)
-    return { data: updateFoodData, message: 'updated' }
+  async updateFood (@Param('id') id: number, @Body() foodData: Partial<CreateFoodDto>) {
+    const food: Food = await this.foodService.update(id, foodData)
+    return { data: food, message: 'updated' }
   }
 
   @Delete('/foods/:id')
   @OpenAPI({ summary: 'Delete a food' })
-  async deleteFood (@Param('id') foodId: number) {
-    const deleteFoodData: Food[] = await this.foodService.deleteFood(foodId)
-    return { data: deleteFoodData, message: 'deleted' }
+  async deleteFood (@Param('id') id: number) {
+    // const deleteFoodData: Food[] = await this.foodService.deleteFood(foodId)
+    const food: Food = await this.foodService.delete(id)
+    return { data: food, message: 'deleted' }
   }
 }

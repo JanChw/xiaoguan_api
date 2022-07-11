@@ -11,12 +11,12 @@ export class CreateSpecDto {
   public price: number;
 }
 
-export class UpdateSpecPartialDto {
-  @IsString()
-  @IsOptional()
-  public name: string;
+// export class UpdateSpecPartialDto {
+//   @IsString()
+//   @IsOptional()
+//   public name: string;
 
-  @IsNumber()
-  @IsOptional()
-  public price: number;
-}
+//   @IsNumber()
+//   @IsOptional()
+//   public price: number;
+// }

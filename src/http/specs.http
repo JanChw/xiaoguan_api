@@ -7,7 +7,7 @@ GET {{ baseURL }}/specs
 
 ###
 # Find food By Id
-GET {{ baseURL }}/specs/1
+GET {{ baseURL }}/specs/2
 
 ###
 # Create food
@@ -16,13 +16,13 @@ Content-Type: application/json
 
 {
   "foodId": 1,
-  "name": "大份",
-	"price": 15
+  "name": "中份",
+	"price": 14
 }
 
 ###
 # Modify food By Id
-PUT {{ baseURL }}/specs/1
+PUT {{ baseURL }}/specs/8
 Content-Type: application/json
 
 {
@@ -31,4 +31,4 @@ Content-Type: application/json
 
 ###
 # Delete food By Id
-DELETE {{ baseURL }}/specs/1
+DELETE {{ baseURL }}/specs/8

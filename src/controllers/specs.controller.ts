@@ -12,14 +12,14 @@ export class SpecsController {
   @Get('/specs')
   @OpenAPI({ summary: 'Return a list of specs' })
   async getSpecs () {
-    const findAllSpecsData: Spec[] = await this.specService.findAllSpecs()
-    return { data: findAllSpecsData, message: 'findAll' }
+    const specs: Spec[] = await this.specService.getAll()
+    return { data: specs, message: 'findAll' }
   }
 
   @Get('/specs/:id')
   @OpenAPI({ summary: 'Return find a spec' })
-  async getSpecById (@Param('id') userId: number) {
-    const spec: Spec = await this.specService.findSpecById(userId)
+  async getSpecById (@Param('id') id: number) {
+    const spec: Spec = await this.specService.getOneById(id)
     return { data: spec, message: 'findOne' }
   }
 
@@ -28,22 +28,22 @@ export class SpecsController {
   @UseBefore(validationMiddleware(CreateSpecDto, 'body'))
   @OpenAPI({ summary: 'Create a new user' })
   async createSpec (@Body() specData: CreateSpecDto) {
-    const createSpecData: Spec = await this.specService.createSpec(specData)
-    return { data: createSpecData, message: 'created' }
+    const spec: Spec = await this.specService.create(specData)
+    return { data: spec, message: 'created' }
   }
 
   @Put('/specs/:id')
-  @UseBefore(validationMiddleware(UpdateSpecPartialDto, 'body', true))
+  @UseBefore(validationMiddleware(CreateSpecDto, 'body', true))
   @OpenAPI({ summary: 'Update a spec' })
-  async updateUser (@Param('id') specId: number, @Body() specData: UpdateSpecPartialDto) {
-    const updateSpecData: Spec[] = await this.specService.updateSpec(specId, specData)
-    return { data: updateSpecData, message: 'updated' }
+  async updateSpec (@Param('id') id: number, @Body() specData: Partial<CreateSpecDto>) {
+    const spec: Spec = await this.specService.update(id, specData)
+    return { data: spec, message: 'updated' }
   }
 
   @Delete('/specs/:id')
   @OpenAPI({ summary: 'Delete a user' })
-  async deleteUser (@Param('id') specId: number) {
-    const deleteSpecData: Spec[] = await this.specService.deleteSpec(specId)
-    return { data: deleteSpecData, message: 'deleted' }
+  async deleteUser (@Param('id') id: number) {
+    const spec: Spec = await this.specService.delete(id)
+    return { data: spec, message: 'deleted' }
   }
 }

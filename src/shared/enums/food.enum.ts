@@ -1,5 +1,5 @@
 export enum SaleType {
-  OFFLINE,
-  ONLINE,
-  BOTH
+  OFFLINE='OFFLINE',
+  ONLINE='ONLINE',
+  BOTH='BOTH'
 }

@@ -36,8 +36,6 @@ export class ServicesController {
   @OpenAPI({ summary: 'Update a service' })
   @UseBefore(validationMiddleware(CreateServicesDto, 'body', true))
   async updateService (@Param('id') id: number, @Body() serviceData: Partial<CreateServicesDto>) {
-    console.log(id)
-    console.log(serviceData)
     const service: Service = await this.servicesService.update(id, serviceData)
     return { data: service, message: 'updateOne' }
   }

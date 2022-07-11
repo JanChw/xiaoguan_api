@@ -21,7 +21,7 @@ Content-Type: application/json
 
 ###
 # Update a new service
-PUT {{ baseURL }}/services/1
+PUT {{ baseURL }}/services/5
 Content-Type: application/json
 
 {
@@ -30,4 +30,4 @@ Content-Type: application/json
 
 ###
 # Delete a service by id
-Delete {{ baseURL }}/services/1
+Delete {{ baseURL }}/services/5
