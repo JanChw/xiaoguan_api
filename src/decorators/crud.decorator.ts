@@ -5,21 +5,25 @@ export default function CRUD (model: string) {
     const repository = db[model]
     const crud: Crud = {
       getAll: async () => {
-        // throw new Error('error from crud')
-        console.log('data from @crud')
         return await repository.findMany()
       },
       getOneById: async (id: number) => {
         return await repository.findFirst({ where: { id } })
       },
       create: async (entity: any) => {
-        return repository.create({ data: entity })
+        return await repository.create({ data: entity })
       },
       delete: async (id: number) => {
-        return repository.delete(id)
+        const _entity = await repository.findFirst({ where: { id } })
+        if (!_entity) { throw new Error('Not Fount') }
+
+        return await repository.delete({ where: { id } })
       },
       update: async (id: number, entity: Partial<any>) => {
-        return repository.update({ where: { id }, data: entity })
+        const _entity = await repository.findFirst({ where: { id } })
+        if (!_entity) { throw new Error('Not Fount') }
+
+        return await repository.update({ where: { id }, data: entity })
       }
     }
 

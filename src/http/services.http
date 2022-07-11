@@ -5,3 +5,29 @@
 # Find All services
 GET {{ baseURL }}/services
 
+###
+# Find a service by id
+GET {{ baseURL }}/services/1
+
+###
+# Create a new service
+POST {{ baseURL }}/services
+Content-Type: application/json
+
+{
+  "name": "桶装水配送",
+  "price": 10
+}
+
+###
+# Update a new service
+PUT {{ baseURL }}/services/1
+Content-Type: application/json
+
+{
+  "remark": "已包含配送费"
+}
+
+###
+# Delete a service by id
+Delete {{ baseURL }}/services/1
