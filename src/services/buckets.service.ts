@@ -3,7 +3,7 @@ import { Bucket } from '@/shared/interfaces/bucket.interface'
 import { CreateBucketDto } from '@/shared/dtos/buckets.dto'
 import { isEmpty } from '@/utils/util'
 import { HttpException } from '@/exceptions/HttpException'
-export default class BucketService {
+export class BucketService {
   public async findAllBuckets (): Promise<Bucket[]> {
     const buckets: Bucket[] = await db.bucket.findMany()
     return buckets
@@ -12,6 +12,13 @@ export default class BucketService {
   public async findBucketByName (bucketName: string): Promise<Bucket> {
     const bucket: Bucket = await db.bucket.findFirst({
       where: { name: bucketName }
+    })
+    return bucket
+  }
+
+  public async findBucketById (bucketId: number): Promise<Bucket> {
+    const bucket: Bucket = await db.bucket.findFirst({
+      where: { id: bucketId }
     })
     return bucket
   }

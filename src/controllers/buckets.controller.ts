@@ -1,5 +1,5 @@
 import { CreateBucketDto } from '@/shared/dtos/buckets.dto'
-import BucketService from '@/services/buckets.service'
+import { BucketService } from '@/services/buckets.service'
 import { Bucket } from '@/shared/interfaces/bucket.interface'
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'

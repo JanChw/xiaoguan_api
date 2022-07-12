@@ -3,34 +3,29 @@
 
 ###
 # Find All files
-GET {{ baseURL }}/files
+GET {{ baseURL }}/files/test
 
 ###
 # Find food By Id
 GET {{ baseURL }}/foods/1
 
+
 ###
-# Create file
-POST {{ baseURL }}/files
+# Update file Optional field
+PUT {{ baseURL }}/files/3
 Content-Type: application/json
 
-[
-  {
-  "filename": "zzzz.png",
-  "originName": "yyzc",
-  "url": "/xiaoguan/zzzz.png",
-  "fileType": "IMAGE",
-  "bucketId": 2
+{
+  "title": "金典菜式",
+  "link": "https://baidu.com"
 }
-]
 
 
 ###
 # Delete files
-DELETE {{ baseURL }}/files
+DELETE {{ baseURL }}/files/test
 Content-Type: application/json
 
 {
-  "bucketName": "xiaoguan",
-  "fileIds": [1,2]
+  "filenames": ["Nf1E56f.webp"]
 }

@@ -1,3 +1,6 @@
+import randomStr from 'randomstring'
+import { Format } from '@/utils/constant'
+import MinioStorage from '@/utils/storage'
 /**
  * @method isEmpty
  * @param {String | Number | Object} value
@@ -16,4 +19,8 @@ export const isEmpty = (value: string | number | object): boolean => {
   } else {
     return false
   }
+}
+
+export const generateFilename = () : string => {
+  return `${randomStr.generate(7)}.${Format.webp}`
 }

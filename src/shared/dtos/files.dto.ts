@@ -29,3 +29,17 @@ export class CreateFileDto {
   @IsOptional()
   public link: string;
 }
+
+export class UpdateFileDto {
+  @IsString()
+  @IsOptional()
+  public title: string;
+
+  @IsString()
+  @IsOptional()
+  public desc: string;
+
+  @IsString()
+  @IsOptional()
+  public link: string;
+}

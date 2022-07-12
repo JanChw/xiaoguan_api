@@ -1,9 +1,11 @@
-import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { FileService } from '@/services/files.service'
-import { CreateFileDto } from '@/shared/dtos/files.dto'
+import { UpdateFileDto } from '@/shared/dtos/files.dto'
 import { File } from '@/shared/interfaces/files.interface'
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseBefore } from 'routing-controllers'
+import { Body, Controller, Delete, Get, HttpCode, HttpError, Param, Post, Put, UploadedFiles, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
+// import { validate } from 'class-validator'
+import MinioStroage from '@/utils/storage'
+import { isEmpty } from '@/utils/util'
 
 @Controller()
 export class FilesController {
@@ -16,24 +18,27 @@ export class FilesController {
     return { data: files, message: 'find files' }
   }
 
-  @Post('/files')
-  @HttpCode(201)
-  @UseBefore(validationMiddleware(CreateFileDto, 'body'))
-  @OpenAPI({ summary: 'Upload many files' })
-  async uploadFilesWithBucket (@Body() files: CreateFileDto[]) {
-    console.log('==================')
-    console.log(files)
-    console.log('-------------------------')
-    console.log('==================')
-    const _files: File[] = await this.fileService.uploadFiles(files)
-    return { data: _files, message: 'upload files' }
+  @Put('/files/:id')
+  @OpenAPI({ summary: 'Update a file' })
+  async updateFileOptionalInfo (@Param('id') id: number, @Body() fileData: UpdateFileDto) {
+    const file: File = await this.fileService.updateFile(id, fileData)
+    return file
   }
 
-  @Delete('/files')
+  @Post('files/upload/:bucketname')
+  @HttpCode(201)
+  @OpenAPI({ summary: 'Upload many files' })
+  async uploadFiles (@Param('bucketname') bucketname: string, @UploadedFiles('file', { options: { storage: MinioStroage() } }) filesData: any) {
+    if (isEmpty(bucketname)) throw new HttpError(500, '传入参数非法')
+    const files: File[] = await this.fileService.uploadFiles(bucketname, filesData)
+    return { data: files, message: 'upload files' }
+  }
+
+  @Delete('/files/:bucketname')
   @OpenAPI({ summary: 'Delete many files' })
-  async removeFilesWithBucket (@Body() delsInfo) {
-    const { bucketName, fileIds } = delsInfo
-    const files: File[] = await this.fileService.removeFiles(bucketName, fileIds)
+  async removeFilesWithBucket (@Param('bucketname') bucketname: string, @Body() delsInfo) {
+    const { filenames } = delsInfo
+    const files: File[] = await this.fileService.removeFiles(bucketname, filenames)
     return { data: files, message: 'remove files' }
   }
 }

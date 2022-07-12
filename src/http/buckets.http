@@ -7,7 +7,7 @@ GET {{ baseURL }}/buckets
 
 ###
 # Find food By Id
-GET {{ baseURL }}/foods/1
+GET {{ baseURL }}/buckets/1
 
 ###
 # Create bucket

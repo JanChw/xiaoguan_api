@@ -3,6 +3,7 @@ import { defaultMetadataStorage } from 'class-transformer'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
+import bodyParser from 'body-parser'
 import express from 'express'
 import helmet from 'helmet'
 import hpp from 'hpp'
@@ -48,8 +49,8 @@ class App {
     this.app.use(hpp())
     this.app.use(helmet())
     this.app.use(compression())
-    this.app.use(express.json())
-    this.app.use(express.urlencoded({ extended: true }))
+    this.app.use(bodyParser.json())
+    this.app.use(bodyParser.urlencoded({ extended: true }))
     this.app.use(cookieParser())
   }
 

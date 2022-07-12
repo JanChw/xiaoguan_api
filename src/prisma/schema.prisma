@@ -34,6 +34,8 @@ model food {
   isPublished Boolean? @default(false)
   saleType SaleType? @default(OFFLINE)
   specs spec[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("foods")
 }
@@ -44,6 +46,8 @@ model spec {
   price Float
   food food @relation(fields: [foodId], references: [id])
   foodId Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("specs")
 }
