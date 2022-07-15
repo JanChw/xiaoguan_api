@@ -1,11 +1,12 @@
 import db from '@/db'
 import { HttpException } from '@/exceptions/HttpException'
-import { Bucket } from '@/shared/interfaces/bucket.interface'
-import { File } from '@/shared/interfaces/files.interface'
+import { Bucket } from '@/types/interfaces/bucket.interface'
+import { File } from '@/types/interfaces/files.interface'
 import { isEmpty } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
 import { removeObjects } from '@/utils/minio'
-import { UpdateFileDto } from '@/shared/dtos/files.dto'
+import { UpdateFileDto } from '@/types/dtos/files.dto'
+import url from 'url'
 
 export class FileService {
   async findAllFilesByBucketName (bucketName: string): Promise<File[]> {
@@ -20,6 +21,10 @@ export class FileService {
   async updateFile (id: number, fileData: UpdateFileDto) {
     const file = await db.file.update({ where: { id }, data: fileData })
     return file
+  }
+
+  // TODO:upload from url
+  async uploadFileFromUrl (buckname: string, url: string) {
   }
 
   async uploadFiles (bucketname: string, filesData: any): Promise<File[]> {

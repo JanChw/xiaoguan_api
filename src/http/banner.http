@@ -1,0 +1,27 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All banners
+GET {{ baseURL }}/banners
+
+###
+# Find banner By Id
+GET {{ baseURL }}/banners/1
+
+###
+# Create banner
+POST {{ baseURL }}/banners
+Content-Type: application/json
+
+{
+ "name": "pc广告栏",
+ "links": {
+  "baidu": "http://www.baidu.com",
+  "google": "http://www.google.com"
+ }
+}
+
+###
+# Delete banner By Id
+DELETE {{ baseURL }}/banners/1

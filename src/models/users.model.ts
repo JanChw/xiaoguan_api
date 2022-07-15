@@ -1,4 +1,4 @@
-import { User } from '@/shared/interfaces/users.interface'
+import { User } from '@/types/interfaces/users.interface'
 
 // password: password
 const userModel: User[] = [

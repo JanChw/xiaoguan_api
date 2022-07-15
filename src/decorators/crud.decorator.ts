@@ -1,4 +1,4 @@
-import Crud from '@/decorators/crud.decorator'
+import { Crud, DeleteManyOptions } from '@/types/interfaces/crud.interface'
 import db from '@/db'
 import { isEmpty } from '@/utils/util'
 import { HttpException } from '@/exceptions/HttpException'
@@ -32,6 +32,11 @@ export default function CRUD (model: string) {
         if (!_entity) { throw new Error(`要删除的${model}不存在`) }
 
         return await Model.delete({ where: { id } })
+      },
+      deletes: async (ids: number[]) => {
+        if (isEmpty(ids)) throw new HttpException(400, '参数不能为空')
+
+        return await Model.deleteMany({ where: { id: { in: ids } } })
       },
 
       update: async (id: number, entity: any, opts = {}) => {

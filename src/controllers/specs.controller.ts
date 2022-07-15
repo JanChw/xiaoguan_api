@@ -1,7 +1,7 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { CreateSpecDto, UpdateSpecPartialDto } from '@/shared/dtos/specs.dto'
-import { Spec } from '@/shared/interfaces/specs.interface'
+import { CreateSpecDto, UpdateSpecPartialDto } from '@/types/dtos/specs.dto'
+import { Spec } from '@/types/interfaces/specs.interface'
 import SpecService from '@services/specs.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
 

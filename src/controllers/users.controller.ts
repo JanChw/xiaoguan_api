@@ -1,7 +1,7 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { CreateUserDto, UpdateUserPartialDto } from '@/shared/dtos/users.dto'
-import { User } from '@/shared/interfaces/users.interface'
+import { CreateUserDto, UpdateUserPartialDto } from '@/types/dtos/users.dto'
+import { User } from '@/types/interfaces/users.interface'
 import UserService from '@services/users.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
 

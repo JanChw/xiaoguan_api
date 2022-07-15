@@ -1,7 +1,7 @@
 import { hash } from 'bcrypt'
-import { CreateUserDto, UpdateUserPartialDto } from '@/shared/dtos/users.dto'
+import { CreateUserDto, UpdateUserPartialDto } from '@/types/dtos/users.dto'
 import { HttpException } from '@exceptions/HttpException'
-import { User } from '@/shared/interfaces/users.interface'
+import { User } from '@/types/interfaces/users.interface'
 import { isEmpty } from '@utils/util'
 import db from '../db'
 

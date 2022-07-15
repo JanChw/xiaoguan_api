@@ -1,6 +1,6 @@
-import { CreateBucketDto } from '@/shared/dtos/buckets.dto'
+import { CreateBucketDto } from '@/types/dtos/buckets.dto'
 import { BucketService } from '@/services/buckets.service'
-import { Bucket } from '@/shared/interfaces/bucket.interface'
+import { Bucket } from '@/types/interfaces/buckets.interface'
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { validationMiddleware } from '@/middlewares/validation.middleware'

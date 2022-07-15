@@ -58,17 +58,33 @@ model file {
   id         Int      @id @unique @default(autoincrement())
   filename   String   @unique
   originName String
-  title      String   @default("")
-  desc       String   @default("")
   url        String
-  link       String   @default("")
   fileType   Media    @map("file_type")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
   bucketId   Int
   bucket     bucket   @relation(fields: [bucketId], references: [id])
+  banners    bannersOnfiles[]
 
   @@map("files")
+}
+// banner file => 多对多
+model banner {
+  id Int @id @unique @default(autoincrement())
+  name String @unique
+  links Json
+  title String?   @default("")
+  desc String? @default("")
+  imgs bannersOnfiles[]
+}
+
+model bannersOnfiles {
+  fileId   Int
+  file     file @relation(fields: [fileId], references: [id])
+  bannerId   Int
+  banner     banner @relation(fields: [bannerId], references: [id])
+
+  @@id([fileId, bannerId])
 }
 
 model service {

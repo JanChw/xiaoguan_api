@@ -1,4 +1,4 @@
-import { Media } from '@/shared/enums/files.enum'
+import { Media } from '@/types/enums/files.enum'
 import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateFileDto {

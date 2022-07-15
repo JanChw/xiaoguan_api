@@ -1,8 +1,8 @@
 import CatchError from '@/decorators/catchError.decorator'
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { ServiceService } from '@/services/services.service'
-import { CreateServicesDto } from '@/shared/dtos/services.dto'
-import { Service } from '@/shared/interfaces/services.interface'
+import { CreateServicesDto } from '@/types/dtos/services.dto'
+import { Service } from '@/types/interfaces/services.interface'
 import { Body, Controller, Delete, Get, Param, Post, Put, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 

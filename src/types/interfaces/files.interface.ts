@@ -1,4 +1,4 @@
-import { Media } from '@/shared/enums/files.enum'
+import { Media } from '@/types/enums/files.enum'
 
 export interface File {
   filename: string;

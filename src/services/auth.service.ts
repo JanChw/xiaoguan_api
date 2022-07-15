@@ -1,10 +1,10 @@
 import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { SECRET_KEY } from '@config'
-import { CreateUserDto } from '@/shared/dtos/users.dto'
+import { CreateUserDto } from '@/types/dtos/users.dto'
 import { HttpException } from '@exceptions/HttpException'
-import { DataStoredInToken, TokenData } from '@/shared/interfaces/auth.interface'
-import { User } from '@/shared/interfaces/users.interface'
+import { DataStoredInToken, TokenData } from '@/types/interfaces/auth.interface'
+import { User } from '@/types/interfaces/users.interface'
 import userModel from '@models/users.model'
 import { isEmpty } from '@utils/util'
 

@@ -1,6 +1,6 @@
 import db from '@/db'
-import { Bucket } from '@/shared/interfaces/bucket.interface'
-import { CreateBucketDto } from '@/shared/dtos/buckets.dto'
+import { Bucket } from '@/types/interfaces/buckets.interface'
+import { CreateBucketDto } from '@/types/dtos/buckets.dto'
 import { isEmpty } from '@/utils/util'
 import { HttpException } from '@/exceptions/HttpException'
 export class BucketService {

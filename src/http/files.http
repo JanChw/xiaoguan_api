@@ -9,6 +9,15 @@ GET {{ baseURL }}/files/test
 # Find food By Id
 GET {{ baseURL }}/foods/1
 
+###
+# upload a file from url
+POST {{ baseURL }}/files/upload/test
+Content-Type: application/json
+
+{
+  "url": "https://lmg.jj20.com/up/allimg/1113/092219135626/1Z922135626-3-1200.jpg"
+}
+
 
 ###
 # Update file Optional field

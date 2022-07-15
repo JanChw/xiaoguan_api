@@ -1,7 +1,7 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { CreateFoodDto } from '@/shared/dtos/foods.dto'
-import { Food } from '@/shared/interfaces/foods.interface'
+import { CreateFoodDto } from '@/types/dtos/foods.dto'
+import { Food } from '@/types/interfaces/foods.interface'
 import FoodService from '@services/foods.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
 

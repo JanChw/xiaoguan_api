@@ -1,7 +1,7 @@
 import db from '../db'
 import { HttpException } from '@exceptions/HttpException'
-import { Food } from '../shared/interfaces/foods.interface'
-import { CreateFoodDto } from '@/shared/dtos/foods.dto'
+import { Food } from '../types/interfaces/foods.interface'
+import { CreateFoodDto } from '@/types/dtos/foods.dto'
 import { isEmpty } from '@utils/util'
 import CRUD from '@/decorators/crud.decorator'
 

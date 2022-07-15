@@ -1,7 +1,7 @@
 import { FileService } from '@/services/files.service'
-import { UpdateFileDto } from '@/shared/dtos/files.dto'
-import { File } from '@/shared/interfaces/files.interface'
-import { Body, Controller, Delete, Get, HttpCode, HttpError, Param, Post, Put, UploadedFiles, UseBefore } from 'routing-controllers'
+import { UpdateFileDto } from '@/types/dtos/files.dto'
+import { File } from '@/types/interfaces/files.interface'
+import { Body, BodyParam, Controller, Delete, Get, HttpCode, HttpError, Param, Post, Put, UploadedFiles, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 // import { validate } from 'class-validator'
 import MinioStroage from '@/utils/storage'
@@ -25,7 +25,7 @@ export class FilesController {
     return file
   }
 
-  @Post('files/upload/:bucketname')
+  @Post('/files/uploads/:bucketname')
   @HttpCode(201)
   @OpenAPI({ summary: 'Upload many files' })
   async uploadFiles (@Param('bucketname') bucketname: string, @UploadedFiles('file', { options: { storage: MinioStroage() } }) filesData: any) {
@@ -34,10 +34,19 @@ export class FilesController {
     return { data: files, message: 'upload files' }
   }
 
+  // TODO:upload from url
+  // @Post('/files/upload/:bucketname')
+  // @HttpCode(201)
+  // @OpenAPI({ summary: 'Upload a file from url' })
+  // async uploadFileFromUrl (@Param('bucketname') bucketname: string, @BodyParam('url') url: string) {
+  //   if (isEmpty(bucketname) || isEmpty(url)) throw new HttpError(500, '传入参数非法')
+  //   const files: File[] = await this.fileService.uploadFileFromUrl(bucketname, url)
+  //   return { data: files, message: 'upload files' }
+  // }
+
   @Delete('/files/:bucketname')
   @OpenAPI({ summary: 'Delete many files' })
-  async removeFilesWithBucket (@Param('bucketname') bucketname: string, @Body() delsInfo) {
-    const { filenames } = delsInfo
+  async removeFilesWithBucket (@Param('bucketname') bucketname: string, @BodyParam('filenames') filenames: string[]) {
     const files: File[] = await this.fileService.removeFiles(bucketname, filenames)
     return { data: files, message: 'remove files' }
   }
