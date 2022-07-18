@@ -8,6 +8,7 @@ import { BucketsController } from '@/controllers/buckets.controller'
 import { FilesController } from '@/controllers/files.controller'
 import { ServicesController } from '@/controllers/services.controller'
 import { BannersController } from '@/controllers/banners.controller'
+import { AddressesController } from './controllers/addresses.controller'
 import validateEnv from '@utils/validateEnv'
 
 validateEnv()
@@ -21,6 +22,7 @@ const app = new App([
   BucketsController,
   FilesController,
   ServicesController,
-  BannersController
+  BannersController,
+  AddressesController
 ])
 app.listen()

@@ -1,23 +1,25 @@
-import { IsEmail, IsString, IsOptional } from 'class-validator'
+import { IsString, IsOptional, IsPhoneNumber } from 'class-validator'
+import { Address } from '@/types/interfaces/address.interface'
 
-export class CreateUserDto {
-  @IsEmail()
-  public email: string;
-
-  @IsString()
-  public password: string;
-}
-
-export class UpdateUserPartialDto {
-  @IsEmail()
-  @IsOptional()
-  public email: string;
-
-  @IsString()
-  @IsOptional()
-  public password: string;
-
+export class UserDto {
   @IsString()
   @IsOptional()
   public name: string;
+
+  @IsString()
+  public password: string;
+
+  @IsPhoneNumber('CH')
+  public phoneNumber: string;
+
+  @IsOptional()
+  addresses: Address[]
+}
+
+export class LoginDto {
+  @IsPhoneNumber('CH')
+  public phoneNumber: string;
+
+  @IsString()
+  public password: string;
 }

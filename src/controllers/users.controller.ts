@@ -1,6 +1,6 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { CreateUserDto, UpdateUserPartialDto } from '@/types/dtos/users.dto'
+import { UserDto } from '@/types/dtos/users.dto'
 import { User } from '@/types/interfaces/users.interface'
 import UserService from '@services/users.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
@@ -19,23 +19,14 @@ export class UsersController {
   @Get('/users/:id')
   @OpenAPI({ summary: 'Return find a user' })
   async getUserById (@Param('id') userId: number) {
-    const findOneUserData: User = await this.userService.findUserById(userId)
+    const findOneUserData: User = await this.userService.findUser({ id: userId })
     return { data: findOneUserData, message: 'findOne' }
   }
 
-  @Post('/users')
-  @HttpCode(201)
-  @UseBefore(validationMiddleware(CreateUserDto, 'body'))
-  @OpenAPI({ summary: 'Create a new user' })
-  async createUser (@Body() userData: CreateUserDto) {
-    const createUserData: User = await this.userService.createUser(userData)
-    return { data: createUserData, message: 'created' }
-  }
-
   @Put('/users/:id')
-  @UseBefore(validationMiddleware(UpdateUserPartialDto, 'body', true))
+  @UseBefore(validationMiddleware(UserDto, 'body', true))
   @OpenAPI({ summary: 'Update a user' })
-  async updateUser (@Param('id') userId: number, @Body() userData: UpdateUserPartialDto) {
+  async updateUser (@Param('id') userId: number, @Body() userData: Partial<UserDto>) {
     const updateUserData: User[] = await this.userService.updateUser(userId, userData)
     return { data: updateUserData, message: 'updated' }
   }

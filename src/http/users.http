@@ -11,21 +11,22 @@ GET {{ baseURL }}/users/1
 
 ###
 # Create User
-POST {{ baseURL }}/users
+POST {{ baseURL }}/signup
 Content-Type: application/json
 
 {
-    "email": "example9@email.com",
-	"password": "password"
+  "phoneNumber": "+8617207280945",
+	"name": "周先生",
+	"password": "123456"
 }
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/users/6
+PUT {{ baseURL }}/users/1
 Content-Type: application/json
 
 {
-	"name": "xiaoming"
+	"name": "小强"
 }
 
 ###

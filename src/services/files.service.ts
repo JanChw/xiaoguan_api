@@ -1,6 +1,6 @@
 import db from '@/db'
 import { HttpException } from '@/exceptions/HttpException'
-import { Bucket } from '@/types/interfaces/bucket.interface'
+import { Bucket } from '@/types/interfaces/buckets.interfacee'
 import { File } from '@/types/interfaces/files.interface'
 import { isEmpty } from '@/utils/util'
 import { HttpError } from 'routing-controllers'

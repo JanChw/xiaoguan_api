@@ -1,7 +1,8 @@
 import { plainToClass } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import { RequestHandler } from 'express'
-import { HttpException } from '@exceptions/HttpException'
+// import { HttpException } from '@exceptions/HttpException'
+import { HttpError } from 'routing-controllers'
 
 const getAllNestedErrors = (error: ValidationError) => {
   if (error.constraints) {
@@ -22,8 +23,7 @@ export const validationMiddleware = (
     validate(obj, { skipMissingProperties, whitelist, forbidNonWhitelisted }).then((errors: ValidationError[]) => {
       if (errors.length > 0) {
         const message = errors.map(getAllNestedErrors).join(', ')
-        console.log(message)
-        next(new HttpException(400, message))
+        next(new HttpError(400, message))
       } else {
         next()
       }

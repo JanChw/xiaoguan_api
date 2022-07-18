@@ -9,16 +9,28 @@ datasource db {
 
 model user {
   id          Int      @id @unique @default(autoincrement())
-  email       String   @unique @default("")
-  name        String   @default("")
+  name        String
   password    String
-  address     String   @default("")
-  phoneNumber String   @default("") @map("phone_number")
+  phoneNumber String  @unique @map("phone_number")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  addresses   address[]
 
   @@map("users")
 }
+
+model address {
+  id Int @id @unique @default(autoincrement())
+  address String 
+  isDefault Boolean @default(false)
+  userId Int?
+  user   user?   @relation(fields: [userId], references: [id])
+
+  @@index([address])
+  @@map("addresses")
+}
+
+
 
 model food {
   id          Int       @id @unique @default(autoincrement())

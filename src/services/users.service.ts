@@ -1,42 +1,35 @@
 import { hash } from 'bcrypt'
-import { CreateUserDto, UpdateUserPartialDto } from '@/types/dtos/users.dto'
-import { HttpException } from '@exceptions/HttpException'
+import { UserDto } from '@/types/dtos/users.dto'
 import { User } from '@/types/interfaces/users.interface'
 import { isEmpty } from '@utils/util'
-import db from '../db'
+import db from '@/db'
+import { HttpError } from 'routing-controllers'
 
+const selectOpts = {
+  id: true,
+  name: true,
+  phoneNumber: true,
+  addresses: true
+}
+
+// 修改 查询 删除
 class UserService {
-  public async findAllUser (): Promise<User[]> {
-    const users: User[] = await db.user.findMany()
+  public async findUser (opts: Partial<User>): Promise<User> {
+    const user: User = await db.user.findFirst({ where: opts, select: selectOpts })
+    return user
+  }
+
+  public async findAllUser (): Promise<User> {
+    const users: User[] = await db.user.findMany({ select: selectOpts })
+
     return users
   }
 
-  public async findUserById (userId: number): Promise<User> {
-    const findUser: User = await db.user.findFirst({ where: { id: userId } })
-    if (!findUser) throw new HttpException(409, "You're not user")
-
-    return findUser
-  }
-
-  public async createUser (userData: CreateUserDto): Promise<User> {
-    if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
-
-    const findUser: User = await db.user.findFirst({ where: { email: userData.email } })
-    if (findUser) throw new HttpException(409, `Your email ${userData.email} already exists`)
-
-    const hashedPassword = await hash(userData.password, 10)
-    userData.password = hashedPassword
-
-    const createUserData: User = await db.user.create({ data: userData })
-
-    return createUserData
-  }
-
-  public async updateUser (userId: number, userData: UpdateUserPartialDto): Promise<User[]> {
-    if (isEmpty(userData)) throw new HttpException(400, "You're not userData")
+  public async updateUser (userId: number, userData: Partial<UserDto>): Promise<User[]> {
+    if (isEmpty(userData)) throw new HttpError(400, '参数不能为空')
 
     const findUser: User = await db.user.findUnique({ where: { id: userId } })
-    if (!findUser) throw new HttpException(409, "You're not user")
+    if (!findUser) throw new HttpError(409, '用户不存在')
 
     if (userData.password) {
       const hashedPassword = await hash(userData.password, 10)
@@ -45,17 +38,18 @@ class UserService {
 
     const updateUserData: User[] = await db.user.update({
       where: { id: userId },
-      data: userData
+      data: userData,
+      select: selectOpts
     })
 
     return updateUserData
   }
 
   public async deleteUser (userId: number): Promise<User[]> {
-    const findUser: User = await db.user.findFirst({ where: { id: userId } })
-    if (!findUser) throw new HttpException(409, "You're not user")
+    const findUser: User = await db.user.findUnique({ where: { id: userId } })
+    if (!findUser) throw new HttpError(409, '用户不存在')
 
-    const deleteUserData: User[] = await db.user.delete({ where: { id: userId } })
+    const deleteUserData: User[] = await db.user.delete({ where: { id: userId }, select: selectOpts })
     return deleteUserData
   }
 }
