@@ -1,0 +1,34 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All addresss
+GET {{ baseURL }}/addresses
+
+###
+# Find address By Id
+GET {{ baseURL }}/addresses/1
+
+###
+# Create address
+POST {{ baseURL }}/addresses
+Content-Type: application/json
+
+{
+ "address":"香聪小区7-12",
+ "isDefault": true,
+ "userId": 2
+}
+
+###
+# Modify address By Id
+PUT {{ baseURL }}/addresses/1
+Content-Type: application/json
+
+{
+  "desc": "蒸肉"
+}
+
+###
+# Delete address By Id
+DELETE {{ baseURL }}/addresses/7

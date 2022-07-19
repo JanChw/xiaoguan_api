@@ -22,7 +22,7 @@ Content-Type: application/json
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/users/1
+PUT {{ baseURL }}/users/2
 Content-Type: application/json
 
 {
@@ -31,4 +31,4 @@ Content-Type: application/json
 
 ###
 # Delete User By Id
-DELETE {{ baseURL }}/users/1
+DELETE {{ baseURL }}/users/2

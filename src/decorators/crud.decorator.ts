@@ -1,4 +1,4 @@
-import { Crud, DeleteManyOptions } from '@/types/interfaces/crud.interface'
+import { Crud } from '@/types/interfaces/crud.interface'
 import db from '@/db'
 import { isEmpty } from '@/utils/util'
 import { HttpException } from '@/exceptions/HttpException'

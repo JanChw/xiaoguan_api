@@ -15,6 +15,8 @@ model user {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   addresses   address[]
+  cart cart?
+  orders order[]
 
   @@map("users")
 }
@@ -30,6 +32,41 @@ model address {
   @@map("addresses")
 }
 
+model order {
+  id Int @id @unique @default(autoincrement())
+  code String @unique
+  status PaymentStatus @default(UNPAID)
+  products cartItem[]
+  totalQty Int @map("total_qty")
+  totalPrice Decimal @map("total_price")
+  userId Int
+  User user @relation(fields: [userId], references: [id])
+  
+}
+
+model cart {
+  id Int @id @unique @default(autoincrement())
+  userId Int @unique
+  user user @relation(fields: [userId], references: [id])
+  cartItems cartItem[]
+  totalQty Int  @map("total_qty") @default(0)
+  totalPrice Decimal @map("total_price") @default(0.0)
+  
+}
+
+model cartItem {
+  id Int @id @unique @default(autoincrement())
+  price Decimal
+  qty Int
+  totalPrice Decimal
+  specId Int
+  spec spec @relation(fields: [specId], references: [id])
+  cartId Int
+  cart cart @relation(fields: [cartId], references: [id])
+  orderId Int?
+  order order? @relation(fields: [orderId], references: [id])
+  
+}
 
 
 model food {
@@ -40,7 +77,8 @@ model food {
   saleType    SaleType? @default(OFFLINE)
   isPublished Boolean?  @default(false)
   name        String    @unique
-  originPrice Float?
+  discount    Decimal? @default(1.0)
+  originPrice Decimal?
   specs       spec[]
 
   @@map("foods")
@@ -49,9 +87,11 @@ model food {
 model spec {
   id     Int    @id @unique @default(autoincrement())
   name   String
-  price  Float
+  price  Decimal
+  discount Decimal? @default(1.0)
   foodId Int
   food   food   @relation(fields: [foodId], references: [id])
+  cartItems cartItem[]
 
   @@map("specs")
 }
@@ -103,7 +143,7 @@ model service {
   id        Int      @id @unique @default(autoincrement())
   name      String
   image     String   @default("")
-  price     Float    @default(0.0)
+  price     Decimal    @default(0.0)
   desc      String   @default("")
   remark    String   @default("")
   createdAt DateTime @default(now()) @map("created_at")
@@ -123,4 +163,10 @@ enum Media {
   VEDIO
   AUDIO
   TEXT
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAYING
+  PAID
 }
