@@ -9,6 +9,7 @@ export class BucketService {
     return buckets
   }
 
+  // TODO:在minio中添加桶
   public async findBucketByName (bucketName: string): Promise<Bucket> {
     const bucket: Bucket = await db.bucket.findFirst({
       where: { name: bucketName }

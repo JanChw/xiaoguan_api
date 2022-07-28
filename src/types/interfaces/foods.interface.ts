@@ -1,6 +1,7 @@
 import { SaleType } from '../enums/food.enum'
 import { Spec } from './specs.interface'
 export interface Food {
+
   imgUrl: string;
 
   name: string;
@@ -11,11 +12,15 @@ export interface Food {
 
   specs?: Spec[];
 
+  discount?: number;
+
   originPrice?: number;
 
   isPublished?: boolean;
 
   saleType?: SaleType;
+
+  images?: File[]
 }
 
 export interface FoodPartial {
@@ -32,4 +37,6 @@ export interface FoodPartial {
   isPublished?: boolean;
 
   saleType?: SaleType;
+
+  images?: File[]
 }

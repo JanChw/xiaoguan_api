@@ -15,6 +15,7 @@ export const removeObject = async (bucketname: string, objectname: string, cb: F
 }
 
 export const removeObjects = async (bucketname: string, objectnames: string[]) => {
+  console.log(bucketname, objectnames)
   const result = mc.removeObjects(bucketname, objectnames)
   return result
 }

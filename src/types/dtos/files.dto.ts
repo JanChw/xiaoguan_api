@@ -1,5 +1,5 @@
 import { Media } from '@/types/enums/files.enum'
-import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
 
 export class CreateFileDto {
   @IsString()
@@ -17,29 +17,12 @@ export class CreateFileDto {
   @IsNumber()
   public bucketId: number;
 
-  @IsString()
+  @IsBoolean()
   @IsOptional()
-  public title: string;
-
-  @IsString()
-  @IsOptional()
-  public desc: string;
-
-  @IsString()
-  @IsOptional()
-  public link: string;
+  public isCollected: boolean;
 }
 
-export class UpdateFileDto {
-  @IsString()
-  @IsOptional()
-  public title: string;
-
-  @IsString()
-  @IsOptional()
-  public desc: string;
-
-  @IsString()
-  @IsOptional()
-  public link: string;
+export class FileOptionalInfoDto {
+  @IsBoolean()
+  public isCollected: boolean;
 }

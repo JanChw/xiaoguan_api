@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -27,6 +28,8 @@ model address {
   isDefault Boolean @default(false)
   userId Int?
   user   user?   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([address])
   @@map("addresses")
@@ -41,6 +44,8 @@ model order {
   totalPrice Decimal @map("total_price")
   userId Int
   User user @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   
 }
 
@@ -51,6 +56,8 @@ model cart {
   cartItems cartItem[]
   totalQty Int  @map("total_qty") @default(0)
   totalPrice Decimal @map("total_price") @default(0.0)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   
 }
 
@@ -65,6 +72,8 @@ model cartItem {
   cart cart @relation(fields: [cartId], references: [id])
   orderId Int?
   order order? @relation(fields: [orderId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   
 }
 
@@ -76,22 +85,28 @@ model food {
   detail      String    @default("")
   saleType    SaleType? @default(OFFLINE)
   isPublished Boolean?  @default(false)
+  isDeleted Boolean? @default(false)
   name        String    @unique
-  discount    Decimal? @default(1.0)
-  originPrice Decimal?
+  discount    Decimal? @default(1.00) @db.Decimal(3, 2)
+  originPrice Decimal? @db.Decimal(4, 2)
+  images  file[]
   specs       spec[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("foods")
 }
 
 model spec {
-  id     Int    @id @unique @default(autoincrement())
-  name   String
-  price  Decimal
-  discount Decimal? @default(1.0)
-  foodId Int
-  food   food   @relation(fields: [foodId], references: [id])
-  cartItems cartItem[]
+  id          Int    @id @unique @default(autoincrement())
+  name        String
+  price       Decimal
+  discount    Decimal? @default(1.0)
+  foodId      Int?
+  food        food?   @relation(fields: [foodId], references: [id])
+  cartItems   cartItem[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("specs")
 }
@@ -110,6 +125,7 @@ model file {
   id         Int      @id @unique @default(autoincrement())
   filename   String   @unique
   originName String
+  isCollected Boolean @default(false)
   url        String
   fileType   Media    @map("file_type")
   createdAt  DateTime @default(now()) @map("created_at")
@@ -117,6 +133,9 @@ model file {
   bucketId   Int
   bucket     bucket   @relation(fields: [bucketId], references: [id])
   banners    bannersOnfiles[]
+  foodId     Int?
+  food       food? @relation(fields: [foodId], references: [id])
+  
 
   @@map("files")
 }

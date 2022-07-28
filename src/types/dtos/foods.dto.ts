@@ -1,8 +1,12 @@
-import { IsBoolean, IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsDate, IsIn, IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator'
 import { SaleType } from '../enums/food.enum'
 import { Spec } from '../interfaces/specs.interface'
 
 export class CreateFoodDto {
+  @IsNumber()
+  @IsOptional()
+  id: number;
+
   @IsString()
   public name: string;
 
@@ -18,7 +22,11 @@ export class CreateFoodDto {
   @IsOptional()
   public specs: Spec[];
 
-  @IsNumber()
+  @IsNumberString()
+  @IsOptional()
+  discount: number;
+
+  @IsNumberString()
   @IsOptional()
   public originPrice: number;
 
@@ -28,5 +36,13 @@ export class CreateFoodDto {
 
   @IsIn(['OFFLINE', 'ONLINE', 'BOTH'])
   @IsOptional()
-  public saleType: SaleType
+  public saleType: SaleType;
+
+  @IsBoolean()
+  @IsOptional()
+  public isDeleted: boolean;
+
+  @IsDate()
+  @IsOptional()
+  public createdAt: Date;
 }

@@ -1,5 +1,5 @@
 import { putObject, removeObject } from '@/utils/minio'
-import { convertToWebpOrAvif } from './opImage'
+// import { convertToWebpOrAvif } from './opImage'
 import { BucketService } from '@/services/buckets.service'
 import { generateFilename } from './util'
 
@@ -24,8 +24,9 @@ MinioStorage.prototype._handleFile = function _handleFile (req, file, cb) {
     const filename = generateFilename()
     file.filename = filename
 
-    const data = await convertToWebpOrAvif(file.stream)
-    const objInfo = await putObject(bucketname, filename, data)
+    // 图片的压缩在浏览器端处理
+    // const data = await convertToWebpOrAvif(file.stream)
+    const objInfo = await putObject(bucketname, filename, file.stream)
     cb(null, { ...objInfo, filename })
   })
 }

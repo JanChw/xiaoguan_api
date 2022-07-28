@@ -1,4 +1,4 @@
-import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
+import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParam, BodyParam, QueryParams } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { CreateFoodDto } from '@/types/dtos/foods.dto'
 import { Food } from '@/types/interfaces/foods.interface'
@@ -11,18 +11,35 @@ export class FoodsController {
 
   @Get('/foods')
   @OpenAPI({ summary: 'Return a list of foods' })
-  async getFoods () {
+  async getFoods (@QueryParam('type') type: string) {
     // const findAllFoods: Food[] = await this.foodService.findAllFoods()
     const foods: Food[] = await this.foodService.getAll({
+      where: {
+        isDeleted: type === 'recycle'
+      },
       include: { specs: true }
     })
     return { data: foods, message: 'findAll' }
   }
 
+  @Get('/foods/search')
+  @OpenAPI({ summary: 'fulltext' })
+  async searchFullText (@QueryParam('content') content: string) {
+    const data: Food[] = content
+      ? await this.foodService.search(content)
+      : await this.foodService.getAll({
+        where: {
+          isDeleted: false
+        },
+        include: { specs: true }
+      })
+
+    return { data, message: 'search' }
+  }
+
   @Get('/foods/:id')
   @OpenAPI({ summary: 'Return find a food' })
   async getFoodById (@Param('id') id: number) {
-    // const food: Food = await this.foodService.findFoodById(foodId)
     const food: Food = await this.foodService.getOneById(id, {
       include: { specs: true }
     })
@@ -43,6 +60,7 @@ export class FoodsController {
   @OpenAPI({ summary: 'Update a food' })
   async updateFood (@Param('id') id: number, @Body() foodData: Partial<CreateFoodDto>) {
     const food: Food = await this.foodService.update(id, foodData)
+    console.log(foodData)
     return { data: food, message: 'updated' }
   }
 
@@ -51,6 +69,13 @@ export class FoodsController {
   async deleteFood (@Param('id') id: number) {
     // const deleteFoodData: Food[] = await this.foodService.deleteFood(foodId)
     const food: Food = await this.foodService.delete(id)
+    return { data: food, message: 'deleted' }
+  }
+
+  @Delete('/foods')
+  @OpenAPI({ summary: 'Delete some foods' })
+  async deleteFoods (@BodyParam('ids') ids: number[]) {
+    const food: Food = await this.foodService.deletes(ids)
     return { data: food, message: 'deleted' }
   }
 }
