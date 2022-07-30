@@ -10,4 +10,5 @@ export interface Crud {
   delete: (id: number) => Promise<any>,
   deletes: (ids: number[]) => Promise<any>,
   update: (id: number, entity: Partial<any>) => Promise<any>
+  updates: (ids: number[], entity: Partial<any>) => Promise<any>
 }

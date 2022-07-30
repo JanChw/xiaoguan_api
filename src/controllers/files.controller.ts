@@ -22,7 +22,7 @@ export class FilesController {
   @OpenAPI({ summary: 'Update a file' })
   async updateFileOptionalInfo (@Param('id') id: number, @Body() fileData: FileOptionalInfoDto) {
     const file: File = await this.fileService.updateFile(id, fileData)
-    return file
+    return { data: file, message: 'update a file' }
   }
 
   @Post('/files/uploads/:bucketname')

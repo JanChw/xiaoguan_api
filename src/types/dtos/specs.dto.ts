@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber } from 'class-validator'
+import { IsString, IsNumber, IsNumberString } from 'class-validator'
 
 export class CreateSpecDto {
   @IsNumber()
@@ -7,8 +7,8 @@ export class CreateSpecDto {
   @IsString()
   public name: string;
 
-  @IsNumber()
-  public price: number;
+  @IsNumberString()
+  public price: number | string;
 }
 
 // export class UpdateSpecPartialDto {

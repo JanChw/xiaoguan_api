@@ -1,7 +1,7 @@
 import db from '@/db'
 import { Bucket } from '@/types/interfaces/buckets.interface'
 import { File, SearchFileOption } from '@/types/interfaces/files.interface'
-import { isEmpty } from '@/utils/util'
+import { delay, isEmpty } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
 import { removeObjects } from '@/utils/minio'
 import { FileOptionalInfoDto } from '@/types/dtos/files.dto'
@@ -23,6 +23,8 @@ export class FileService {
     }
 
     const files: File[] = await db.file.findMany(condition)
+
+    // await delay(5000)
     return files
   }
 

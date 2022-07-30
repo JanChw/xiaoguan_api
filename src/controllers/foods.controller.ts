@@ -1,6 +1,6 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParam, BodyParam, QueryParams } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { CreateFoodDto } from '@/types/dtos/foods.dto'
+import { BatchUpdateFoodsDto, FoodDto } from '@/types/dtos/foods.dto'
 import { Food } from '@/types/interfaces/foods.interface'
 import FoodService from '@services/foods.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
@@ -48,17 +48,26 @@ export class FoodsController {
 
   @Post('/foods')
   @HttpCode(201)
-  @UseBefore(validationMiddleware(CreateFoodDto, 'body'))
+  @UseBefore(validationMiddleware(FoodDto, 'body'))
   @OpenAPI({ summary: 'Create a new Food' })
-  async createUser (@Body() foodData: CreateFoodDto) {
+  async createUser (@Body() foodData: FoodDto) {
     const food: Food = await this.foodService.createFood(foodData)
     return { data: food, message: 'created' }
   }
 
-  @Put('/foods/:id')
-  @UseBefore(validationMiddleware(CreateFoodDto, 'body', true))
+  @Put('/foods')
+  @UseBefore(validationMiddleware(BatchUpdateFoodsDto, 'body'))
   @OpenAPI({ summary: 'Update a food' })
-  async updateFood (@Param('id') id: number, @Body() foodData: Partial<CreateFoodDto>) {
+  async updateFoods (@Body() batchUpdateFoods: BatchUpdateFoodsDto) {
+    const { ids, payload } = batchUpdateFoods
+    const foods: Food[] = await this.foodService.updates(ids, payload)
+    return { data: foods, message: 'updated' }
+  }
+
+  @Put('/foods/:id')
+  @UseBefore(validationMiddleware(FoodDto, 'body', true))
+  @OpenAPI({ summary: 'Update a food' })
+  async updateFood (@Param('id') id: number, @Body() foodData: Partial<FoodDto>) {
     const food: Food = await this.foodService.update(id, foodData)
     console.log(foodData)
     return { data: food, message: 'updated' }

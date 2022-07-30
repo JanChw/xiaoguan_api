@@ -24,3 +24,11 @@ export const isEmpty = (value: string | number | object): boolean => {
 export const generateFilename = () : string => {
   return `${randomStr.generate(7)}.${Format.webp}`
 }
+
+export function delay (timeout: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true)
+    }, timeout)
+  })
+}

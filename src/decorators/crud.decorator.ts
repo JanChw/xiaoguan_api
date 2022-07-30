@@ -45,6 +45,11 @@ export default function CRUD (model: string) {
         if (!_entity) { throw new Error(`要更新的${model}不存在`) }
 
         return await Model.update(Object.assign(opts, { where: { id }, data: entity }))
+      },
+
+      updates: async (ids: number[], entity: any, opts = {}) => {
+        if (isEmpty(ids) || isEmpty(entity)) throw new HttpException(400, '参数不能为空')
+        return await Model.updateMany(Object.assign(opts, { where: { id: { in: ids } }, data: entity }))
       }
     }
 

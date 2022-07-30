@@ -1,8 +1,8 @@
-import { IsBoolean, IsDate, IsIn, IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsDate, IsIn, IsNumber, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator'
 import { SaleType } from '../enums/food.enum'
 import { Spec } from '../interfaces/specs.interface'
 
-export class CreateFoodDto {
+export class FoodDto {
   @IsNumber()
   @IsOptional()
   id: number;
@@ -45,4 +45,12 @@ export class CreateFoodDto {
   @IsDate()
   @IsOptional()
   public createdAt: Date;
+}
+
+export class BatchUpdateFoodsDto {
+  @IsArray()
+  ids: number[];
+
+  @IsObject()
+  payload: Partial<FoodDto>
 }
