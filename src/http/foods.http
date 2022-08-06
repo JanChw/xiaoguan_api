@@ -7,7 +7,7 @@ GET {{ baseURL }}/foods
 
 ###
 # Find All foods
-GET {{ baseURL }}/foods/search?content=蒸
+GET {{ baseURL }}/foods/search?content=肉糕
 
 ###
 # Find food By Id

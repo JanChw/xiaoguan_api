@@ -8,8 +8,18 @@ import { HttpError } from 'routing-controllers'
 const selectOpts = {
   id: true,
   name: true,
-  phoneNumber: true,
-  addresses: true
+  phone: true,
+  addresses: true,
+  createdAt: true
+}
+
+const _selectOpts = {
+  id: true,
+  name: true,
+  phone: true,
+  addresses: true,
+  cart: true,
+  orders: true
 }
 
 // 修改 查询 删除
@@ -23,6 +33,24 @@ class UserService {
     const users: User[] = await db.user.findMany({ select: selectOpts })
 
     return users
+  }
+
+  public async search (content: string): Promise<User> {
+    if (isEmpty(content)) throw new HttpError(400, '参数不能为空')
+
+    const data: User[] = await db.user.findMany({
+      where: {
+        name: {
+          search: content
+        },
+        phone: {
+          search: content
+        }
+      },
+      select: _selectOpts
+    })
+
+    return data
   }
 
   public async updateUser (userId: number, userData: Partial<UserDto>): Promise<User[]> {

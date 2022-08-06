@@ -12,7 +12,7 @@ import { HttpError } from 'routing-controllers'
 const selectOpts = {
   id: true,
   name: true,
-  phoneNumber: true
+  phone: true
 }
 
 class AuthService {
@@ -22,7 +22,7 @@ class AuthService {
     // TODO: 参数为空的逻辑放到全局中间件
     if (isEmpty(userData)) throw new HttpError(400, '参数不能为空')
 
-    const findUser: User = await db.user.findFirst({ where: { phoneNumber: userData.phoneNumber } })
+    const findUser: User = await db.user.findFirst({ where: { phone: userData.phone } })
     console.log(findUser)
     if (findUser) throw new HttpError(409, '此电话号已注册')
 

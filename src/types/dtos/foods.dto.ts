@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsDate, IsIn, IsNumber, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsDate, IsIn, IsNumber, IsObject, IsOptional, IsString, ValidateIf } from 'class-validator'
 import { SaleType } from '../enums/food.enum'
 import { Spec } from '../interfaces/specs.interface'
 
@@ -22,11 +22,13 @@ export class FoodDto {
   @IsOptional()
   public specs: Spec[];
 
-  @IsNumberString()
+  // @ValidateIf(n => n && !Number.isNaN(Number(n)))
+  @IsNumber()
   @IsOptional()
   discount: number;
 
-  @IsNumberString()
+  // @ValidateIf(n => n && !Number.isNaN(Number(n)))
+  @IsNumber()
   @IsOptional()
   public originPrice: number;
 

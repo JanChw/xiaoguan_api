@@ -1,9 +1,18 @@
-import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
+import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParam } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { UserDto } from '@/types/dtos/users.dto'
 import { User } from '@/types/interfaces/users.interface'
 import UserService from '@services/users.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
+
+const selectOpts = {
+  id: true,
+  name: true,
+  phone: true,
+  addresses: true,
+  cart: true,
+  orders: true
+}
 
 @Controller()
 export class UsersController {
@@ -14,6 +23,16 @@ export class UsersController {
   async getUsers () {
     const findAllUsersData: User[] = await this.userService.findAllUser()
     return { data: findAllUsersData, message: 'findAll' }
+  }
+
+  @Get('/users/search')
+  @OpenAPI({ summary: 'fulltext' })
+  async searchFullText (@QueryParam('content') content: string) {
+    const data: User[] = content
+      ? await this.userService.search(content)
+      : await this.userService.getAll({ select: selectOpts })
+
+    return { data, message: 'search' }
   }
 
   @Get('/users/:id')

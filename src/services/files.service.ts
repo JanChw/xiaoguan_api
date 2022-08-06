@@ -29,7 +29,6 @@ export class FileService {
   }
 
   async updateFile (id: number, fileData: FileOptionalInfoDto) {
-    console.log(fileData)
     const file = await db.file.update({ where: { id }, data: fileData })
     return file
   }

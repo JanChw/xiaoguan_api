@@ -12,7 +12,7 @@ model user {
   id          Int      @id @unique @default(autoincrement())
   name        String
   password    String
-  phoneNumber String  @unique @map("phone_number")
+  phone String  @unique
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   addresses   address[]

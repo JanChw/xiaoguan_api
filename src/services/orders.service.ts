@@ -1,6 +1,8 @@
 import db from '@/db'
 import { Cart } from '@/types/interfaces/carts.interface'
 import { Order } from '@/types/interfaces/orders.interface'
+import { isEmpty } from '@/utils/util'
+import { HttpError } from 'routing-controllers'
 import { CartService } from './carts.service'
 @CRUD('order')
 export class OrderService {
@@ -18,6 +20,23 @@ export class OrderService {
       }
     })
     return order
+  }
+
+  public async search (content: string): Promise<Order[]> {
+    if (isEmpty(content)) throw new HttpError(400, '参数不能为空')
+
+    const data: Order[] = await db.order.findMany({
+      where: {
+        code: {
+          search: content
+        },
+        status: {
+          search: content
+        }
+      }
+    })
+
+    return data
   }
 
   async getAllOrderByUserId (userId: number) {

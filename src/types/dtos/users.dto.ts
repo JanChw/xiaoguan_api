@@ -10,7 +10,7 @@ export class UserDto {
   public password: string;
 
   @IsPhoneNumber('CH')
-  public phoneNumber: string;
+  public phone: string;
 
   @IsOptional()
   addresses: Address[]
@@ -18,7 +18,7 @@ export class UserDto {
 
 export class LoginDto {
   @IsPhoneNumber('CH')
-  public phoneNumber: string;
+  public phone: string;
 
   @IsString()
   public password: string;

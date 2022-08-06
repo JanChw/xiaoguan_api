@@ -1,7 +1,7 @@
 import db from '../db'
 // import { HttpException } from '@exceptions/HttpException'
 import { Food } from '../types/interfaces/foods.interface'
-import { CreateFoodDto } from '@/types/dtos/foods.dto'
+import { FoodDto } from '@/types/dtos/foods.dto'
 import { isEmpty } from '@utils/util'
 import CRUD from '@/decorators/crud.decorator'
 import { HttpError } from 'routing-controllers'
@@ -9,7 +9,7 @@ import { HttpError } from 'routing-controllers'
 @CRUD('food')
 export default class FoodService {
   // TODO: create函数能否显示关联数据
-  public async createFood (foodData: CreateFoodDto): Promise<Food> {
+  public async createFood (foodData: FoodDto): Promise<Food> {
     if (isEmpty(foodData)) throw new HttpError(400, '参数不能为空')
 
     const food: Food = await db.food.findFirst({ where: { name: foodData.name } })

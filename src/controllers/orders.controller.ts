@@ -1,9 +1,9 @@
-import { order } from './../../node_modules/.pnpm/@prisma+client@4.0.0_prisma@4.0.0/node_modules/.prisma/client/index.d'
-import { Body, BodyParam, Controller, Delete, Get, Param, Post } from 'routing-controllers'
+import { Body, BodyParam, Controller, Delete, Get, Param, Post, QueryParam } from 'routing-controllers'
 import randomStr from 'randomstring'
 import { OrderService } from '@/services/orders.service'
 import { Order } from '@/types/interfaces/orders.interface'
 import { OpenAPI } from 'routing-controllers-openapi'
+
 @Controller()
 export class OrdersController {
   public orderService = new OrderService()
@@ -16,6 +16,21 @@ export class OrdersController {
   async createOrder (userId: number, @BodyParam('token') token: string) {
     const order: Order = await this.orderService.createOrder(userId, token)
     return { data: order, message: 'create order' }
+  }
+
+  @Get('/orders/search')
+  @OpenAPI({ summary: 'fulltext' })
+  async searchFullText (@QueryParam('content') content: string) {
+    const data: Order[] = content
+      ? await this.orderService.search(content)
+      : await this.orderService.getAll({
+        where: {
+          isDeleted: false
+        },
+        include: { specs: true }
+      })
+
+    return { data, message: 'search' }
   }
 
   @Get('/orders/:userId')
