@@ -1,0 +1,33 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All resources
+GET {{ baseURL }}/resources
+
+###
+# Find User By Id
+GET {{ baseURL }}/resources/1
+
+###
+# Create User
+POST {{ baseURL }}/resources
+Content-Type: application/json
+
+{
+ "title": "删除食品",
+ "permissions":"food:delete"
+}
+
+###
+# Modify User By Id
+PUT {{ baseURL }}/resources/2
+Content-Type: application/json
+
+{
+	"name": "小强"
+}
+
+###
+# Delete User By Id
+DELETE {{ baseURL }}/resources/2

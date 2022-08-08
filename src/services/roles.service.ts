@@ -9,22 +9,28 @@ export class RoleService {
     let update = []
     if (op === 'add') {
       update = permissionIDs.map(id => {
-        return { category: { connect: { id } } }
+        return { resource: { connect: { id } } }
       })
-    }
 
-    if (op === 'delete') {
-      update = permissionIDs.map(id => {
-        return { category: { disconnect: { id } } }
-      })
-    }
-
-    return await db.role.update({
-      data: {
-        resources: {
-          update
+      return await db.role.update({
+        where: { id: roleId },
+        data: {
+          resources: {
+            create: update
+          }
         }
-      }
-    })
+      })
+    }
+
+    if (op === 'remove') {
+      update = permissionIDs.map(id => {
+        return { id }
+      })
+
+      return await db.rolesOnresources.deleteMany({
+        where: { roleId, resourceId: { in: permissionIDs } }
+      })
+    }
+    console.log(update)
   }
 }

@@ -1,12 +1,13 @@
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { ResourceService } from '@/services/resources.service'
 import { ResourceDto } from '@/types/dtos/resources.dto'
-import { Body, Controller, Get, Param, Post, Put, UseBefore } from 'routing-controllers'
+import { Resource } from '@/types/interfaces/resources.interface'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { ResourceType } from '../types/enums/resources.enum'
 
 @Controller()
-export class ResourceController {
+export class ResourcesController {
   public resourceService: ResourceService = new ResourceService()
 
   @Get('/permissions')
@@ -22,9 +23,16 @@ export class ResourceController {
 
   @Get('/resources')
   @OpenAPI({ summary: 'list resources' })
-  async getAlResources () {
+  async getAllResources () {
     const data: Resource[] = await this.resourceService.getAll()
     return { data, message: 'list resources' }
+  }
+
+  @Get('/resources/:id')
+  @OpenAPI({ summary: 'get a resources' })
+  async getResource (@Param('id') id: number) {
+    const data: Resource = await this.resourceService.getOneById(id)
+    return { data, message: 'get a resources' }
   }
 
   @Post('/resources')
@@ -38,7 +46,7 @@ export class ResourceController {
   @Put('/resources/:id')
   @OpenAPI({ summary: 'update a resource' })
   @UseBefore(validationMiddleware(ResourceDto, 'body', true))
-  async updateRole (@Body() resData: ResourceDto, @Param('id') id: number) {
+  async updateRole (@Body() resData: Partial<ResourceDto>, @Param('id') id: number) {
     const data: Resource = this.resourceService.update(id, resData)
     return { data, message: 'update resource' }
   }

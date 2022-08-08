@@ -4,7 +4,7 @@ import { ResourceType } from '../types/enums/resources.enum'
 @CRUD('resource')
 export class ResourceService {
   async getAllPermissions (): Promise<[]> {
-    return await db.resource.find({
+    return await db.resource.findMany({
       where: {
         type: ResourceType.ACTION_BUTTON
       },

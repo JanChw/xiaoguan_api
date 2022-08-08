@@ -11,6 +11,7 @@ import { BannersController } from '@/controllers/banners.controller'
 import { AddressesController } from './controllers/addresses.controller'
 import { StaffsController } from './controllers/staffs.controller'
 import { RolesController } from './controllers/roles.controller'
+import { ResourcesController } from './controllers/resources.controller'
 import validateEnv from '@utils/validateEnv'
 
 validateEnv()
@@ -27,6 +28,7 @@ const app = new App([
   BannersController,
   AddressesController,
   StaffsController,
-  RolesController
+  RolesController,
+  ResourcesController
 ])
 app.listen()

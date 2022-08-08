@@ -11,7 +11,7 @@ datasource db {
 
 model user {
   id          Int      @id @unique @default(autoincrement())
-  name        String
+  name        String?
   password    String
   phone String  @unique
   createdAt   DateTime @default(now()) @map("created_at")
@@ -51,11 +51,11 @@ model role {
 
 model resource {
   id Int @id @unique @default(autoincrement())
-  pid Int
+  pid Int? @default(0)
   title String
   permission String @unique
   type Resource @default(ACTION_BUTTON)
-  path String
+  path String?
   roles rolesOnresources[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")

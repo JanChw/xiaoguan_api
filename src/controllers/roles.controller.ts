@@ -43,7 +43,8 @@ export class RolesController {
   @Put('/roles/:id/permissions')
   @OpenAPI({ summary: 'operate permissions for a role with type query parameters' })
   async addPermissionsToRole (@BodyParam('ids') permissionIDs: number[], @Param('id') roleId: number, @QueryParam('type') op: opPermission) {
-    const data = await this.roleService.opPermissionsToRole(permissionIDs, roleId, type)
+    console.log(op)
+    const data = await this.roleService.opPermissionsToRole(permissionIDs, roleId, op)
     return { data, message: 'add permissions to a role' }
   }
 

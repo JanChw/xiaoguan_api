@@ -10,12 +10,17 @@ GET {{ baseURL }}/roles
 GET {{ baseURL }}/roles/1
 
 ###
+# Find User By Id
+GET {{ baseURL }}/roles/1/permissions
+
+###
 # Create User
-POST {{ baseURL }}/signup
+POST {{ baseURL }}/roles
 Content-Type: application/json
 
 {
- "name": "test"
+ "name": "super_admin",
+ "title": "超级管理员"
 }
 
 ###
