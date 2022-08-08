@@ -1,0 +1,34 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Find All staffs
+GET {{ baseURL }}/staffs
+
+###
+# Find User By Id
+GET {{ baseURL }}/staffs/1
+
+###
+# Create User
+POST {{ baseURL }}/staffs/create
+Content-Type: application/json
+
+{
+  "phone": "+8615172435973",
+	"name": "周先生",
+	"password": "123456"
+}
+
+###
+# Modify User By Id
+PUT {{ baseURL }}/staffs/2
+Content-Type: application/json
+
+{
+	"name": "小强"
+}
+
+###
+# Delete User By Id
+DELETE {{ baseURL }}/staffs/2

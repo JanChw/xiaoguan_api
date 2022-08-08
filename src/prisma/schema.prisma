@@ -8,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model user {
   id          Int      @id @unique @default(autoincrement())
   name        String
@@ -21,6 +22,40 @@ model user {
 
   @@map("users")
 }
+
+model staff {
+  id          Int      @id @unique @default(autoincrement())
+  name        String
+  password    String
+  phone String  @unique
+  isCopartner  Boolean @default(false)
+  hireDate   DateTime @default(now())
+  leaveDate DateTime?
+  roles rolesOnstaffs[]
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("staffs")
+}
+
+model role {
+  id Int @id @unique @default(autoincrement())
+   name String @unique
+   title String
+  staffs rolesOnstaffs[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("roles")
+}
+
+model rolesOnstaffs {
+  roleId   Int
+  role     role @relation(fields: [roleId], references: [id])
+  staffId   Int
+  staff     staff @relation(fields: [staffId], references: [id])
+  @@id([roleId, staffId])
+}
+// resource
 
 model address {
   id Int @id @unique @default(autoincrement())
