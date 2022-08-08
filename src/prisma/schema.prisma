@@ -39,14 +39,30 @@ model staff {
 
 model role {
   id Int @id @unique @default(autoincrement())
-   name String @unique
-   title String
+  name String @unique
+  title String
   staffs rolesOnstaffs[]
+  resources rolesOnresources[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("roles")
 }
+
+model resource {
+  id Int @id @unique @default(autoincrement())
+  pid Int
+  title String
+  permission String @unique
+  type Resource @default(ACTION_BUTTON)
+  path String
+  roles rolesOnresources[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("resources")
+}
+
 
 model rolesOnstaffs {
   roleId   Int
@@ -54,8 +70,20 @@ model rolesOnstaffs {
   staffId   Int
   staff     staff @relation(fields: [staffId], references: [id])
   @@id([roleId, staffId])
+
+  @@map("roles_staffs")
 }
 // resource
+
+model rolesOnresources {
+  roleId   Int
+  role     role @relation(fields: [roleId], references: [id])
+  resourceId   Int
+  resource     resource @relation(fields: [resourceId], references: [id])
+  @@id([roleId, resourceId])
+
+  @@map("roles_resources")
+}
 
 model address {
   id Int @id @unique @default(autoincrement())
@@ -81,6 +109,8 @@ model order {
   User user @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("orders")
   
 }
 
@@ -93,6 +123,8 @@ model cart {
   totalPrice Decimal @map("total_price") @default(0.0)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("carts")
   
 }
 
@@ -109,6 +141,8 @@ model cartItem {
   order order? @relation(fields: [orderId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("cart_items")
   
 }
 
@@ -182,6 +216,8 @@ model banner {
   title String?   @default("")
   desc String? @default("")
   imgs bannersOnfiles[]
+
+  @@map("banners")
 }
 
 model bannersOnfiles {
@@ -191,6 +227,7 @@ model bannersOnfiles {
   banner     banner @relation(fields: [bannerId], references: [id])
 
   @@id([fileId, bannerId])
+  @@map("banners_files")
 }
 
 model service {
@@ -223,4 +260,10 @@ enum PaymentStatus {
   UNPAID
   PAYING
   PAID
+}
+
+enum Resource {
+  MENU
+  CONTENT
+  ACTION_BUTTON
 }

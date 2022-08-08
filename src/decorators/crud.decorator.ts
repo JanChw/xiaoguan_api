@@ -13,7 +13,7 @@ export default function CRUD (model: string) {
       getOneById: async (id: number, opts = {}) => {
         if (isEmpty(id)) throw new HttpException(400, '参数不能为空')
 
-        const repository = await Model.findFirst(Object.assign(opts, { where: { id } }))
+        const repository = await Model.findUnique(Object.assign(opts, { where: { id } }))
         if (!repository) throw new HttpException(404, `${model} 不存在`)
 
         return repository
