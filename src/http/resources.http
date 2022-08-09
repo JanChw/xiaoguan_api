@@ -10,13 +10,13 @@ GET {{ baseURL }}/resources
 GET {{ baseURL }}/resources/1
 
 ###
-# Create User
+# Create resource
 POST {{ baseURL }}/resources
 Content-Type: application/json
 
 {
- "title": "删除食品",
- "permissions":"food:delete"
+ "title": "修改订单",
+ "permission":"order:update"
 }
 
 ###

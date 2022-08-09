@@ -15,8 +15,7 @@ POST {{ baseURL }}/signup
 Content-Type: application/json
 
 {
-  "phone": "+8615172435973",
-	"name": "周先生",
+  "phone": "+8615172435972",
 	"password": "123456"
 }
 

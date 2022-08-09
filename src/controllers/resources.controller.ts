@@ -1,3 +1,5 @@
+import CatchErr from '@/decorators/catchErr.decorator'
+import { AddPermssion } from '@/decorators/permission.decorator'
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { ResourceService } from '@/services/resources.service'
 import { ResourceDto } from '@/types/dtos/resources.dto'
@@ -38,8 +40,10 @@ export class ResourcesController {
   @Post('/resources')
   @OpenAPI({ summary: 'register a resource' })
   @UseBefore(validationMiddleware(ResourceDto, 'body'))
+  @AddPermssion('添加权限', 'resource:create')
   async createResource (@Body() resData: ResourceDto) {
-    const data: Resource = this.resourceService.create(resData)
+    // const data: Resource = await this.resourceService.createWithUnique(resData, 'permission')
+    const data: Resource = await this.resourceService.create(resData)
     return { data, message: 'register resource' }
   }
 

@@ -4,7 +4,7 @@ export default function CatchError () {
     const keys = Object.keys(pro)
     // const metadata = Reflect.getMetadataKeys(target)
     // console.log(metadata)
-    // console.log('===================')
+    console.log('===================')
     keys.forEach(key => {
       const fun = pro[key]
       if (fun instanceof Function) {
@@ -15,7 +15,7 @@ export default function CatchError () {
             console.log('-----------------')
             console.log(err.message)
             console.log('-----------------')
-            return { status: 500, data: null, message: err.message }
+            // return { status: err.httpCode || 500, data: null, message: err.message }
           })
         }
       }

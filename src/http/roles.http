@@ -11,7 +11,7 @@ GET {{ baseURL }}/roles/1
 
 ###
 # Find User By Id
-GET {{ baseURL }}/roles/1/permissions
+GET {{ baseURL }}/roles/1/resources
 
 ###
 # Create User
@@ -25,11 +25,11 @@ Content-Type: application/json
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/roles/2
+PUT {{ baseURL }}/roles/1/permissions?type=remove
 Content-Type: application/json
 
 {
-	"name": "小强"
+	"ids": [1, 4]
 }
 
 ###
