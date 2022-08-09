@@ -2,7 +2,7 @@ import { RoleService } from '@/services/roles.service'
 import { RoleDto } from '@/types/dtos/roles.dto'
 import { Resource } from '@/types/interfaces/resources.interface'
 import { Role } from '@/types/interfaces/roles.interface'
-import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParam } from 'routing-controllers'
+import { Authorized, Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParam } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
 type opPermission = 'add' | 'remove'
@@ -19,6 +19,7 @@ export class RolesController {
   }
 
   @Get('/roles/:id')
+  @Authorized('role:find')
   @OpenAPI({ summary: 'return a role' })
   async getRoleById (@Param('id') id: number) {
     const data: Role = await this.roleService.getOneById(id)

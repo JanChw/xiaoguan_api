@@ -1,7 +1,7 @@
 import { StaffService } from '@/services/staffs.service'
 import { StaffDto } from '@/types/dtos/staffs.dto'
 import { Staff } from '@/types/interfaces/staffs.interface'
-import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put } from 'routing-controllers'
+import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParam } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
 @Controller()
@@ -31,8 +31,8 @@ export class StaffsController {
 
   @Get('/staffs/:id')
   @OpenAPI({ summary: 'return a staff' })
-  async getStaff (@Param('id') id: number) {
-    const data: Staff = await this.staffService.getOneById(id)
+  async getStaffWithRoles (@Param('id') id: number) {
+    const data: Staff = await this.staffService.getOneWithRelations(id)
     return { data, message: 'get a staff' }
   }
 
@@ -41,6 +41,13 @@ export class StaffsController {
   async createStaff (@Body() staff: StaffDto) {
     const data: Staff = await this.staffService.createStaff(staff)
     return { data, message: 'create a staff' }
+  }
+
+  @Put('/staffs/:id/roles')
+  @OpenAPI({ summary: 'add or remove roles for staff with type query parameter' })
+  async addRolesToStaff (@BodyParam('ids') roleIds: number[], @Param('id') staffId: number, @QueryParam('type') op: 'add' | 'remove') {
+    const data = await this.staffService.opRolesToStaff(roleIds, staffId, op)
+    return { data, message: 'add or remove roles from staff' }
   }
 
   @Put('/staffs/:id')

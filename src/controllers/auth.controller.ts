@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { Controller, Body, Post, UseBefore, HttpCode, Res } from 'routing-controllers'
+import { Controller, Body, Post, UseBefore, HttpCode, Res, Param } from 'routing-controllers'
 import { UserDto, LoginDto } from '@/types/dtos/users.dto'
 // import { RequestWithUser } from '@/types/interfaces/auth.interface'
 import { User } from '@/types/interfaces/users.interface'
@@ -20,10 +20,10 @@ export class AuthController {
     return { data: user, message: 'signup' }
   }
 
-  @Post('/login')
+  @Post('/:role/login')
   @UseBefore(validationMiddleware(LoginDto, 'body'))
-  async logIn (@Res() res: Response, @Body() userData: LoginDto) {
-    const { token } = await this.authService.login(userData)
+  async logIn (@Res() res: Response, @Body() userData: LoginDto, @Param('role') role: 'user'|'staff') {
+    const { token } = await this.authService.login(userData, role)
 
     return { data: token, message: 'login' }
   }

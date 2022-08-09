@@ -19,8 +19,8 @@ POST {{ baseURL }}/roles
 Content-Type: application/json
 
 {
- "name": "super_admin",
- "title": "超级管理员"
+ "name": "guest",
+ "title": "客户"
 }
 
 ###

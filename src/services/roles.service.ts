@@ -31,6 +31,5 @@ export class RoleService {
         where: { roleId, resourceId: { in: permissionIDs } }
       })
     }
-    console.log(update)
   }
 }

@@ -14,7 +14,7 @@ import swaggerUi from 'swagger-ui-express'
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config'
 import errorMiddleware from '@middlewares/error.middleware'
 import { logger, stream } from '@utils/logger'
-
+import authorizationChecker from 'authorizationChecker'
 class App {
   public app: express.Application;
   public env: string;
@@ -61,7 +61,8 @@ class App {
         credentials: CREDENTIALS
       },
       controllers,
-      defaultErrorHandler: false
+      defaultErrorHandler: false,
+      authorizationChecker
     })
   }
 

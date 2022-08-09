@@ -20,6 +20,15 @@ export default function CRUD (model: string) {
         return repository
       },
 
+      getOneWithManyToManyRelations: async (opts) => {
+        if (isEmpty(opts)) throw new HttpError(400, '参数不能为空')
+
+        const repository = await Model.findMany(opts)
+        if (!repository) throw new HttpError(404, `${model} 不存在`)
+
+        return repository
+      },
+
       create: async (entity: any, opts = {}) => {
         if (isEmpty(entity)) throw new HttpError(400, '参数不能为空')
         return await Model.create(Object.assign(opts, { data: entity }))
@@ -35,7 +44,7 @@ export default function CRUD (model: string) {
           const model = await Model.findUnique(whereCondition)
           if (model) throw new HttpError(400, `${entity[unique]}已经存在`)
         }
-        return await Model.create({ data: entity }).catch(err => console.error(err))
+        return await Model.create({ data: entity })
       },
       // TODO:如果有关联数据会报错
       delete: async (id: number) => {
@@ -62,7 +71,7 @@ export default function CRUD (model: string) {
 
       updates: async (ids: number[], entity: any, opts = {}) => {
         if (isEmpty(ids) || isEmpty(entity)) throw new HttpError(400, '参数不能为空')
-        return await Model.updateMany(Object.assign(opts, { where: { id: { in: ids } }, data: entity })).catch(err => console.error(err))
+        return await Model.updateMany(Object.assign(opts, { where: { id: { in: ids } }, data: entity }))
       }
     }
 

@@ -33,24 +33,24 @@ class AuthService {
     return createUserData
   }
 
-  public async login (userData: LoginDto): Promise<{ token: TokenData; findUser: User }> {
-    if (isEmpty(userData)) throw new HttpError(400, '参数不能为空')
+  public async login (data: LoginDto, role: 'user' | 'staff'): Promise<{ token: TokenData; findUser: User }> {
+    if (isEmpty(data)) throw new HttpError(400, '参数不能为空')
 
-    const findUser: User = await db.user.findFirst({ where: { phoneNumber: userData.phoneNumber } })
-    if (!findUser) throw new HttpError(409, '该手机号的用户不存在')
+    const findData = await db[role].findFirst({ where: { phone: data.phone } })
+    if (!findData) throw new HttpError(409, '该手机号不存在')
 
-    const isPasswordMatching: boolean = await compare(userData.password, findUser.password)
+    const isPasswordMatching: boolean = await compare(data.password, findData.password)
     if (!isPasswordMatching) throw new HttpError(409, '密码输入错误')
 
-    const token = this.createToken(findUser)
+    const token = this.createToken(findData)
 
-    return { token, findUser }
+    return { token, findData }
   }
 
   public createToken (user: User): TokenData {
     const dataStoredInToken: DataStoredInToken = { id: user.id }
     const secretKey: string = SECRET_KEY
-    const expiresIn: number = 60 * 60
+    const expiresIn: number | string = '7d'
 
     return { token: sign(dataStoredInToken, secretKey, { expiresIn }) }
   }

@@ -15,9 +15,28 @@ POST {{ baseURL }}/staffs/create
 Content-Type: application/json
 
 {
-  "phone": "+8615172435973",
+  "phone": "+8615172435971",
 	"name": "周先生",
 	"password": "123456"
+}
+
+###
+POST {{ baseURL }}/staff/login
+Content-Type: application/json
+
+{
+  "phone": "+8615172435971",
+	"password": "123456"
+}
+
+
+###
+# add or remove roles from staff
+PUT {{ baseURL }}/staffs/1/roles?type=add
+Content-Type: application/json
+
+{
+	"ids": [1, 5]
 }
 
 ###

@@ -40,7 +40,7 @@ model staff {
 model role {
   id Int @id @unique @default(autoincrement())
   name String @unique
-  title String
+  title String //中文
   staffs rolesOnstaffs[]
   resources rolesOnresources[]
   createdAt   DateTime @default(now()) @map("created_at")
@@ -56,6 +56,7 @@ model resource {
   permission String @unique
   type Resource @default(ACTION_BUTTON)
   path String?
+  isDeleted Boolean @default(false)
   roles rolesOnresources[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")

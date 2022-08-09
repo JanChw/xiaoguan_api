@@ -1,4 +1,4 @@
-import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParam, BodyParam, QueryParams } from 'routing-controllers'
+import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParam, BodyParam, QueryParams, Authorized } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { BatchUpdateFoodsDto, FoodDto } from '@/types/dtos/foods.dto'
 import { Food } from '@/types/interfaces/foods.interface'
@@ -42,6 +42,7 @@ export class FoodsController {
   @Get('/foods/:id')
   @OpenAPI({ summary: 'Return find a food' })
   @AddPermssion('查找商品', 'food:find')
+  @Authorized('food:find')
   async getFoodById (@Param('id') id: number) {
     const food: Food = await this.foodService.getOneById(id, {
       include: { specs: true }
