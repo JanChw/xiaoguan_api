@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import { Server } from 'http'
 import { defaultMetadataStorage } from 'class-transformer'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import compression from 'compression'
@@ -15,24 +16,31 @@ import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config'
 import errorMiddleware from '@middlewares/error.middleware'
 import { logger, stream } from '@utils/logger'
 import authorizationChecker from 'authorizationChecker'
-class App {
+
+const app = express()
+
+export const server = new Server(app)
+
+export class App {
+  public server: Server;
   public app: express.Application;
   public env: string;
   public port: string | number;
 
-  constructor (Controllers: Function[]) {
-    this.app = express()
+  constructor (appControllers: Function[]) {
+    this.server = server
+    this.app = app
     this.env = NODE_ENV || 'development'
     this.port = PORT || 3000
 
     this.initializeMiddlewares()
-    this.initializeRoutes(Controllers)
-    this.initializeSwagger(Controllers)
+    this.initializeRoutes(appControllers)
+    this.initializeSwagger(appControllers)
     this.initializeErrorHandling()
   }
 
   public listen () {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       logger.info('=================================')
       logger.info(`======= ENV: ${this.env} =======`)
       logger.info(`🚀 App listening on the port ${this.port}`)
@@ -41,7 +49,7 @@ class App {
   }
 
   public getServer () {
-    return this.app
+    return this.server
   }
 
   private initializeMiddlewares () {
@@ -101,5 +109,3 @@ class App {
     this.app.use(errorMiddleware)
   }
 }
-
-export default App

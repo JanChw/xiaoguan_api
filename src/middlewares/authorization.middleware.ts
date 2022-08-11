@@ -7,7 +7,6 @@ const JWT_EXPIRED = 'jwt expired'
 
 const authorizationChecker = async (action: Action, permission: string[]) => {
   try {
-    console.log(action.request.headers)
     const authorization = action.request.headers.authorization
     if (!authorization) throw new HttpError(403, '请先登录')
     const token = authorization.split(' ')[1]

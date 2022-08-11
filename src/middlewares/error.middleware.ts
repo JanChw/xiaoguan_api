@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-// import { HttpException } from '@exceptions/HttpException'
 import { logger } from '@utils/logger'
 import { HttpError } from 'routing-controllers'
 
