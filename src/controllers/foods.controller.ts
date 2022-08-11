@@ -55,6 +55,7 @@ export class FoodsController {
   @UseBefore(validationMiddleware(FoodDto, 'body'))
   @OpenAPI({ summary: 'Create a new Food' })
   @AddPermssion('创建食品', 'food:create')
+  @Authorized('food:create')
   async createUser (@Body() foodData: FoodDto) {
     const food: Food = await this.foodService.createFood(foodData)
     return { data: food, message: 'created' }
@@ -64,6 +65,7 @@ export class FoodsController {
   @UseBefore(validationMiddleware(BatchUpdateFoodsDto, 'body'))
   @OpenAPI({ summary: 'Update a food' })
   @AddPermssion('批量更新食品', 'food:updates')
+  @Authorized('food:updates')
   async updateFoods (@Body() batchUpdateFoods: BatchUpdateFoodsDto) {
     const { ids, payload } = batchUpdateFoods
     const foods: Food[] = await this.foodService.updates(ids, payload)
@@ -74,6 +76,7 @@ export class FoodsController {
   @UseBefore(validationMiddleware(FoodDto, 'body', true))
   @OpenAPI({ summary: 'Update a food' })
   @AddPermssion('更新食品', 'food:update')
+  @Authorized('food:update')
   async updateFood (@Param('id') id: number, @Body() foodData: Partial<FoodDto>) {
     const food: Food = await this.foodService.update(id, foodData)
     console.log(foodData)

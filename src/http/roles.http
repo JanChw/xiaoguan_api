@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/roles/1/permissions?type=remove
+PUT {{ baseURL }}/roles/1/permissions?type=add
 Content-Type: application/json
 
 {

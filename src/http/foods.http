@@ -1,6 +1,8 @@
 # baseURL
 @baseURL = http://localhost:3000
 
+@authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjYwMDQ1ODQyLCJleHAiOjE2NjA2NTA2NDJ9.IO2NckAoiRqBqy0XkIO8TprHnqXJQ51zd3-S3SNNbQ8
+
 ###
 # Find All foods
 GET {{ baseURL }}/foods
@@ -17,6 +19,7 @@ GET {{ baseURL }}/foods/1
 # Create food
 POST {{ baseURL }}/foods
 Content-Type: application/json
+Authorization: {{ authorization }}
 
 {
   "name": "莲子汤",
@@ -29,6 +32,7 @@ Content-Type: application/json
 # Modify food By Id
 PUT {{ baseURL }}/foods/1
 Content-Type: application/json
+Authorization: {{ authorization }}
 
 {
   "desc": "蒸肉"
