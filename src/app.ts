@@ -15,7 +15,7 @@ import swaggerUi from 'swagger-ui-express'
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config'
 import errorMiddleware from '@middlewares/error.middleware'
 import { logger, stream } from '@utils/logger'
-import authorizationChecker from 'authorizationChecker'
+import authorizationChecker from '@/middlewares/authorization.middleware'
 
 const app = express()
 
@@ -27,15 +27,15 @@ export class App {
   public env: string;
   public port: string | number;
 
-  constructor (appControllers: Function[]) {
+  constructor (controllers: Function[]) {
     this.server = server
     this.app = app
     this.env = NODE_ENV || 'development'
     this.port = PORT || 3000
 
     this.initializeMiddlewares()
-    this.initializeRoutes(appControllers)
-    this.initializeSwagger(appControllers)
+    this.initializeRoutes(controllers)
+    this.initializeSwagger(controllers)
     this.initializeErrorHandling()
   }
 

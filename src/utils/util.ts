@@ -1,6 +1,8 @@
 import randomStr from 'randomstring'
 import { Format } from '@/utils/constant'
-import MinioStorage from '@/utils/storage'
+// import { globby } from 'globby'
+import { join } from 'path'
+import fg from 'fast-glob'
 /**
  * @method isEmpty
  * @param {String | Number | Object} value
@@ -31,4 +33,16 @@ export function delay (timeout: number) {
       resolve(true)
     }, timeout)
   })
+}
+
+export async function loadFiles (dir: string, patterns: string[]): Promise<Function[]> {
+  const currentDir = join(process.cwd(), dir)
+  const files = await fg(patterns, { cwd: currentDir })
+
+  const promises = files.map(file => import(join(currentDir, file)))
+  const controllersObj = await Promise.all(promises)
+
+  const controllers = Object.values(Object.assign({}, ...controllersObj))
+
+  return controllers
 }

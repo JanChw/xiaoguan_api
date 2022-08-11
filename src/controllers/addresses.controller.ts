@@ -1,9 +1,7 @@
-import { address } from './../../node_modules/.pnpm/@prisma+client@4.0.0_prisma@4.0.0/node_modules/.prisma/client/index.d'
 import { AddressService } from '@/services/address.service'
 import { Address } from '@/types/interfaces/address.interface'
 import { AddressDto } from '@/types/dtos/addresses.dto'
-import { isEmpty } from 'class-validator'
-import { Body, Controller, Delete, Get, HttpError, Param, Post, Put, QueryParam, UseBefore } from 'routing-controllers'
+import { Body, Controller, Delete, Get, Param, Post, Put, QueryParam, UseBefore } from 'routing-controllers'
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 
 @Controller()

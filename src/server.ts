@@ -1,36 +1,16 @@
 import '@/socket'
 import { App } from '@/app'
-import { AuthController } from '@controllers/auth.controller'
-import { IndexController } from '@controllers/index.controller'
-import { UsersController } from '@controllers/users.controller'
-import { FoodsController } from '@controllers/foods.controller'
-import { SpecsController } from '@controllers/specs.controller'
-import { BucketsController } from '@/controllers/buckets.controller'
-import { FilesController } from '@/controllers/files.controller'
-import { ServicesController } from '@/controllers/services.controller'
-import { BannersController } from '@/controllers/banners.controller'
-import { AddressesController } from './controllers/addresses.controller'
-import { StaffsController } from './controllers/staffs.controller'
-import { RolesController } from './controllers/roles.controller'
-import { ResourcesController } from './controllers/resources.controller'
-import { MessageController } from './controllers/message.controller'
 import validateEnv from '@utils/validateEnv'
+import { loadFiles } from '@/utils/util'
 
-validateEnv()
+async function runApp () {
+  const controllers = await loadFiles('./src/controllers', ['!(message|orders|carts).controller.ts'])
 
-const app = new App([
-  AuthController,
-  IndexController,
-  UsersController,
-  FoodsController,
-  SpecsController,
-  BucketsController,
-  FilesController,
-  ServicesController,
-  BannersController,
-  AddressesController,
-  StaffsController,
-  RolesController,
-  ResourcesController
-], { controllers: [MessageController] })
-app.listen()
+  validateEnv()
+
+  const app = new App(controllers)
+
+  app.listen()
+}
+
+runApp()
