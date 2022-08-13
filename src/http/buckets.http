@@ -19,5 +19,9 @@ Content-Type: application/json
 }
 
 ###
+#  set default bucket
+DELETE {{ baseURL }}/buckets/test/default
+
+###
 # Delete food By Id
 DELETE {{ baseURL }}/buckets/test

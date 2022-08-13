@@ -1,6 +1,10 @@
-import { IsString } from 'class-validator'
+import { IsBoolean, IsOptional, IsString } from 'class-validator'
 
-export class CreateBucketDto {
+export class BucketDto {
   @IsString()
   public name: string;
+
+  @IsBoolean()
+  @IsOptional()
+  public isDefault: boolean;
 }
