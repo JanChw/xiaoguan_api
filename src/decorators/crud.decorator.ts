@@ -65,7 +65,7 @@ export default function CRUD (model: string) {
         if (isEmpty(id) || isEmpty(entity)) throw new HttpError(400, '参数不能为空')
         const _entity = await Model.findFirst({ where: { id } })
         if (!_entity) { throw new Error(`要更新的${model}不存在`) }
-
+        console.log({ data: entity })
         return await Model.update(Object.assign(opts, { where: { id }, data: entity }))
       },
 

@@ -31,7 +31,7 @@ model staff {
   isCopartner  Boolean @default(false)
   hireDate   DateTime @default(now())
   leaveDate DateTime?
-  roles rolesOnstaffs[]
+  roles role[]
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("staffs")
@@ -41,8 +41,8 @@ model role {
   id Int @id @unique @default(autoincrement())
   name String @unique
   title String //中文
-  staffs rolesOnstaffs[]
-  resources rolesOnresources[]
+  staffs staff[]
+  resources resource[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -57,34 +57,13 @@ model resource {
   type Resource @default(ACTION_BUTTON)
   path String?
   isDeleted Boolean @default(false)
-  roles rolesOnresources[]
+  roles role[]
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("resources")
 }
 
-
-model rolesOnstaffs {
-  roleId   Int
-  role     role @relation(fields: [roleId], references: [id])
-  staffId   Int
-  staff     staff @relation(fields: [staffId], references: [id])
-  @@id([roleId, staffId])
-
-  @@map("roles_staffs")
-}
-// resource
-
-model rolesOnresources {
-  roleId   Int
-  role     role @relation(fields: [roleId], references: [id])
-  resourceId   Int
-  resource     resource @relation(fields: [resourceId], references: [id])
-  @@id([roleId, resourceId])
-
-  @@map("roles_resources")
-}
 
 model address {
   id Int @id @unique @default(autoincrement())
@@ -147,7 +126,6 @@ model cartItem {
   
 }
 
-
 model food {
   id          Int       @id @unique @default(autoincrement())
   imgUrl      String
@@ -184,6 +162,7 @@ model spec {
 model bucket {
   id        Int      @id @unique @default(autoincrement())
   name      String   @unique
+  isDefault Boolean @default(false)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   files     file[]
@@ -202,7 +181,7 @@ model file {
   updatedAt  DateTime @updatedAt @map("updated_at")
   bucketId   Int
   bucket     bucket   @relation(fields: [bucketId], references: [id])
-  banners    bannersOnfiles[]
+  banner banner[]
   foodId     Int?
   food       food? @relation(fields: [foodId], references: [id])
   
@@ -216,20 +195,11 @@ model banner {
   links Json
   title String?   @default("")
   desc String? @default("")
-  imgs bannersOnfiles[]
+  imgs file[]
 
   @@map("banners")
 }
 
-model bannersOnfiles {
-  fileId   Int
-  file     file @relation(fields: [fileId], references: [id])
-  bannerId   Int
-  banner     banner @relation(fields: [bannerId], references: [id])
-
-  @@id([fileId, bannerId])
-  @@map("banners_files")
-}
 
 model service {
   id        Int      @id @unique @default(autoincrement())

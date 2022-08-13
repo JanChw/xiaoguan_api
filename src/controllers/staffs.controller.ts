@@ -32,7 +32,28 @@ export class StaffsController {
   @Get('/staffs/:id')
   @OpenAPI({ summary: 'return a staff' })
   async getStaffWithRoles (@Param('id') id: number) {
-    const data: Staff = await this.staffService.getOneWithRelations(id)
+    // const data: Staff = await this.staffService.getOneWithRelations(id)
+    const data: Staff = await this.staffService.getOneById(id, {
+      include: {
+        roles: {
+          select: {
+            id: true,
+            name: true,
+            resources: {
+              select: {
+                permission: true
+              }
+            }
+          }
+        }
+
+      }
+    })
+    let { roles } = data
+    const permissions = roles.map(role => role.resources).flat().map(resource => resource.permission)
+    roles = roles.map(role => role.name)
+    data.roles = roles
+    data.permissions = permissions
     return { data, message: 'get a staff' }
   }
 

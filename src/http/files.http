@@ -6,12 +6,12 @@
 GET {{ baseURL }}/files/test
 
 ###
-# Find food By Id
-GET {{ baseURL }}/foods/1
+# Find file By Id
+GET {{ baseURL }}/files/1
 
 ###
 # upload a file from url
-POST {{ baseURL }}/files/upload/test
+POST {{ baseURL }}/files/upload/test/remote
 Content-Type: application/json
 
 {

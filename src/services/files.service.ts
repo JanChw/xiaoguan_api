@@ -1,12 +1,19 @@
 import db from '@/db'
 import { Bucket } from '@/types/interfaces/buckets.interface'
 import { File, SearchFileOption } from '@/types/interfaces/files.interface'
-import { delay, isEmpty } from '@/utils/util'
+import { isEmpty, generateFilename } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
-import { removeObjects } from '@/utils/minio'
+import { removeObjects, putObject } from '@/utils/minio'
+import { convertToWebpOrAvif } from '@/utils/opImage'
 import { FileOptionalInfoDto } from '@/types/dtos/files.dto'
+import path from 'path'
+import { Media } from '@/types/enums/files.enum'
+import { BucketService } from './buckets.service'
+import { request } from 'undici'
 
 export class FileService {
+  public bucketService: BucketService = new BucketService()
+
   async findAllFilesByBucketName (opts: SearchFileOption): Promise<File[]> {
     const { bucketname, originName, isCollected } = opts
     if (isEmpty(bucketname)) throw new HttpError(400, 'bucketName 不能为空')
@@ -33,8 +40,27 @@ export class FileService {
     return file
   }
 
-  // TODO:upload from url
-  async uploadFileFromUrl (buckname: string, url: string) {
+  // TODO:原子化操作
+  async uploadFileFromUrl (bucketname: string, url: string) {
+    const bucket = await this.bucketService.findBucketByName(bucketname)
+    const filename = generateFilename()
+    const file = {
+      filename,
+      originName: path.basename(url),
+      url: `/${bucketname}/${filename}`,
+      fileType: Media.IMAGE,
+      bucketId: bucket.id
+    }
+    const { statusCode, body } = await request(url)
+
+    if (statusCode !== 200) throw new HttpError(400, '网络图片请求失败')
+
+    const data = await convertToWebpOrAvif(body)
+    const uploadPms = putObject(bucketname, filename, data)
+    const filePms = db.file.create({ data: file })
+
+    const [, img] = await Promise.all([uploadPms, filePms])
+    return img
   }
 
   async uploadFiles (bucketname: string, filesData: any): Promise<File[]> {

@@ -8,7 +8,7 @@ GET {{ baseURL }}/staffs
 
 ###
 # Find User By Id
-GET {{ baseURL }}/staffs/1
+GET {{ baseURL }}/staffs/3
 
 ###
 # Create User
@@ -37,7 +37,7 @@ PUT {{ baseURL }}/staffs/3/roles?type=add
 Content-Type: application/json
 
 {
-	"ids": [1, 5]
+	"ids": [2, 3]
 }
 
 ###

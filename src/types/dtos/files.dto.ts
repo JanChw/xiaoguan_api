@@ -1,5 +1,5 @@
 import { Media } from '@/types/enums/files.enum'
-import { IsBoolean, IsIn, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsIn, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
 
 export class CreateFileDto {
   @IsString()
@@ -25,4 +25,9 @@ export class CreateFileDto {
 export class FileOptionalInfoDto {
   @IsBoolean()
   public isCollected: boolean;
+}
+
+export class FileRemoteAddress {
+  @IsUrl()
+  public url: string;
 }

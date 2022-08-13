@@ -2,7 +2,7 @@ import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { BannerService } from '@/services/banners.service'
 import { BannerDto } from '@/types/dtos/banners.dto'
 import { Banner } from '@/types/interfaces/banners.interface'
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseBefore } from 'routing-controllers'
+import { Body, BodyParam, Controller, Delete, Get, HttpCode, Param, Post, Put, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
 @Controller()
@@ -21,8 +21,21 @@ export class BannersController {
   @Get('/banners/:id')
   @OpenAPI({ summary: 'Return a banner' })
   async getBannerById (@Param('id') id: number) {
-    const banner: Banner = await this.bannerService.getOneById(id)
-    return banner
+    const data: Banner = await this.bannerService.getOneById(id, {
+      include: {
+        imgs: {
+          select: {
+            id: true,
+            filename: true,
+            url: true,
+            bucket: {
+              select: { id: true, name: true }
+            }
+          }
+        }
+      }
+    })
+    return { data, message: 'get a banner' }
   }
 
   @Post('/banners')
@@ -30,7 +43,13 @@ export class BannersController {
   @UseBefore(validationMiddleware(BannerDto, 'body'))
   @OpenAPI({ summary: 'Create a banner' })
   async CreateBanner (@Body() bannerData: BannerDto) {
-    const result = await this.bannerService.create(bannerData)
+    const { imgs } = bannerData
+    if (imgs) {
+      bannerData.imgs = { connect: imgs.map(id => { return { id } }) }
+    }
+
+    const result = await this.bannerService.create(bannerData, { include: { imgs: true } })
+
     return { data: result, message: 'createOne' }
   }
 
@@ -40,6 +59,22 @@ export class BannersController {
   async updateBanner (@Param('id') id: number, @Body() bannerData: Partial<BannerDto>) {
     const banner: Banner = await this.bannerService.update(id, bannerData)
     return { data: banner, message: 'UpdateOne' }
+  }
+
+  @Put('/banners/:id/:type/img')
+  @UseBefore(validationMiddleware(BannerDto, 'body', true))
+  @OpenAPI({ summary: 'add or remove img from banner' })
+  async addImageToBanner (@Param('id') id: number, @Param('type') op: string, @BodyParam('imgs') imgIds: number[]) {
+    let data
+    if (op === 'add') {
+      data = { imgs: { connect: imgIds.map(id => { return { id } }) } }
+    }
+
+    if (op === 'remove') {
+      data = { imgs: { disconnect: imgIds.map(id => { return { id } }) } }
+    }
+    const banner: Banner = await this.bannerService.update(id, data, { include: { imgs: true } })
+    return { data: banner, message: 'add or remove img from banner' }
   }
 
   @Delete('/banners/:id')

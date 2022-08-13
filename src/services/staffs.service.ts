@@ -30,43 +30,24 @@ export class StaffService {
   }
 
   async opRolesToStaff (roleIDs: number[], staffId: number, op = 'add') {
-    let update = []
+    const relationRecords = roleIDs.map(id => {
+      return { id }
+    })
+    const data = { roles: {} }
     if (op === 'add') {
-      update = roleIDs.map(id => {
-        return { role: { connect: { id } } }
-      })
-
-      return await db.staff.update({
-        where: { id: staffId },
-        data: {
-          roles: {
-            create: update
-          }
-        },
-        include: { roles: true }
-      })
+      // eslint-disable-next-line dot-notation
+      data['roles']['connect'] = relationRecords
     }
 
     if (op === 'remove') {
-      update = roleIDs.map(id => {
-        return { id }
-      })
-
-      return await db.rolesOnstaffs.deleteMany({
-        where: { staffId, roleId: { in: roleIDs } }
-      })
+      // eslint-disable-next-line dot-notation
+      data['roles']['disconnect'] = relationRecords
     }
-  }
 
-  async getOneWithRelations (staffId: number) {
-    const staffSelect = { id: true, name: true, phone: true, isCopartner: true, hireDate: true, leaveDate: true, roles: true }
-    const staff = await db.staff.findUnique({ where: { id: staffId }, select: staffSelect })
-    const roleIds = staff.roles.map(role => role.roleId)
-    const permissionIdObjs = await db.rolesOnresources.findMany({ where: { roleId: { in: roleIds } } })
-    const permissionIds = permissionIdObjs.map(item => item.resourceId)
-    const permissions = await db.resource.findMany({ where: { id: { in: permissionIds } }, select: { permission: true } })
-    // eslint-disable-next-line dot-notation
-    staff['permissions'] = permissions.map(item => item.permission)
-    return staff
+    return await db.staff.update({
+      where: { id: staffId },
+      include: { roles: true },
+      data
+    })
   }
 }

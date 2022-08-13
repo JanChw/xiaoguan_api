@@ -15,11 +15,30 @@ POST {{ baseURL }}/banners
 Content-Type: application/json
 
 {
- "name": "pc广告栏",
+ "name": "广告",
  "links": {
   "baidu": "http://www.baidu.com",
   "google": "http://www.google.com"
  }
+}
+
+###
+# add img to banner
+PUT {{ baseURL }}/banners/1/add/img
+Content-Type: application/json
+
+{
+ "imgs": [4, 5]
+}
+
+
+###
+# add img to banner
+PUT {{ baseURL }}/banners/1/remove/img
+Content-Type: application/json
+
+{
+ "imgs": [4]
 }
 
 ###

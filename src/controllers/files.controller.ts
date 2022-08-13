@@ -1,11 +1,11 @@
 import { FileService } from '@/services/files.service'
-import { FileOptionalInfoDto } from '@/types/dtos/files.dto'
+import { FileOptionalInfoDto, FileRemoteAddress } from '@/types/dtos/files.dto'
 import { File } from '@/types/interfaces/files.interface'
 import { Body, BodyParam, Controller, Delete, Get, HttpCode, HttpError, Param, Post, Put, QueryParam, UploadedFiles, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-// import { validate } from 'class-validator'
 import MinioStroage from '@/utils/storage'
 import { isEmpty } from '@/utils/util'
+import { validationMiddleware } from '@/middlewares/validation.middleware'
 
 @Controller()
 export class FilesController {
@@ -35,14 +35,15 @@ export class FilesController {
   }
 
   // TODO:upload from url
-  // @Post('/files/upload/:bucketname')
-  // @HttpCode(201)
-  // @OpenAPI({ summary: 'Upload a file from url' })
-  // async uploadFileFromUrl (@Param('bucketname') bucketname: string, @BodyParam('url') url: string) {
-  //   if (isEmpty(bucketname) || isEmpty(url)) throw new HttpError(500, '传入参数非法')
-  //   const files: File[] = await this.fileService.uploadFileFromUrl(bucketname, url)
-  //   return { data: files, message: 'upload files' }
-  // }
+  @Post('/files/upload/:bucketname/remote')
+  @HttpCode(201)
+  @UseBefore(validationMiddleware(FileRemoteAddress, 'body'))
+  @OpenAPI({ summary: 'Upload a file from url' })
+  async uploadFileFromUrl (@Param('bucketname') bucketname: string, @BodyParam('url') url: string) {
+    if (isEmpty(bucketname)) throw new HttpError(500, '传入参数非法')
+    const file: File = await this.fileService.uploadFileFromUrl(bucketname, url)
+    return { data: file, message: 'upload file' }
+  }
 
   @Delete('/files/:bucketname')
   @OpenAPI({ summary: 'Delete many files' })

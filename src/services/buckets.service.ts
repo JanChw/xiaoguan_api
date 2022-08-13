@@ -2,7 +2,7 @@ import db from '@/db'
 import { Bucket } from '@/types/interfaces/buckets.interface'
 import { CreateBucketDto } from '@/types/dtos/buckets.dto'
 import { isEmpty } from '@/utils/util'
-import { HttpException } from '@/exceptions/HttpException'
+import { HttpError, NotFoundError } from 'routing-controllers'
 export class BucketService {
   public async findAllBuckets (): Promise<Bucket[]> {
     const buckets: Bucket[] = await db.bucket.findMany()
@@ -14,6 +14,9 @@ export class BucketService {
     const bucket: Bucket = await db.bucket.findFirst({
       where: { name: bucketName }
     })
+
+    if (!bucket) { throw new NotFoundError('bucket not found') }
+
     return bucket
   }
 
@@ -25,10 +28,10 @@ export class BucketService {
   }
 
   public async createBucket (bucketData: CreateBucketDto): Promise<CreateBucketDto> {
-    if (isEmpty(bucketData.name)) throw new HttpException(400, 'name参数不能为空')
+    if (isEmpty(bucketData.name)) throw new HttpError(400, 'name参数不能为空')
 
     const _bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketData.name } })
-    if (_bucket) throw new HttpException(409, `${bucketData.name} bucket already exists`)
+    if (_bucket) throw new HttpError(409, `${bucketData.name} bucket already exists`)
 
     const bucket: Bucket = await db.bucket.create({ data: bucketData })
     return bucket
@@ -36,7 +39,7 @@ export class BucketService {
 
   public async deleteBucket (bucketName: string): Promise<Bucket[]> {
     const _bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketName } })
-    if (!_bucket) throw new HttpException(409, `${bucketName} 不存在`)
+    if (!_bucket) throw new HttpError(409, `${bucketName} 不存在`)
 
     const bucket: Bucket[] = await db.bucket.delete({ where: { name: bucketName } })
     return bucket
