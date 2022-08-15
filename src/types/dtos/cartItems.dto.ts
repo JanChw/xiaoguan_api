@@ -1,15 +1,26 @@
-import { IsDecimal, isIn, IsInt } from 'class-validator'
+import { IsNumber, IsInt, IsDecimal } from 'class-validator'
 
 export class CartItemDto {
-  @IsDecimal()
-  price: Number
+  @IsNumber()
+  price: number
 
   @IsInt()
-  qty: Number
+  qty: number
 
   @IsInt()
-  specId: Number
+  specId: number
 
   @IsInt()
   cartId: number
+
+  @IsNumber()
+  totalPrice: number
+}
+
+export class CartQtyDto {
+  @IsInt()
+  id: number
+
+  @IsInt()
+  qty: number
 }

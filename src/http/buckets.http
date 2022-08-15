@@ -6,6 +6,10 @@
 GET {{ baseURL }}/buckets
 
 ###
+# Find All buckets
+GET {{ baseURL }}/buckets/default
+
+###
 # Find food By Id
 GET {{ baseURL }}/buckets/1
 
@@ -15,13 +19,13 @@ POST {{ baseURL }}/buckets
 Content-Type: application/json
 
 {
- "name": "test"
+ "name": "xiaoguan"
 }
 
 ###
 #  set default bucket
-DELETE {{ baseURL }}/buckets/test/default
+PUT {{ baseURL }}/buckets/test/default
 
 ###
 # Delete food By Id
-DELETE {{ baseURL }}/buckets/test
+DELETE {{ baseURL }}/buckets/xiaoguan

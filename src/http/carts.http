@@ -1,0 +1,40 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+@authorization = bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwNDQ0MjMwLCJleHAiOjE2NjEwNDkwMzB9.vuVpgcCQ7ZVqADsuLeoYsXTGxTCbL7riG-7DNmYMmQM
+
+###
+# find user cart
+GET {{ baseURL }}/user/1/cart
+
+
+###
+# clear cart
+PUT {{ baseURL }}/user/1/cart/clear
+
+
+###
+# add item to cart
+PUT {{ baseURL }}/user/1/cart/add 
+Content-Type: application/json
+
+{
+  "price": 14.0,
+  "qty": 1,
+  "specId": 1,
+  "cartId": 2,
+  "totalPrice": 14.0
+}
+
+
+
+
+
+###
+# Delete cartItems
+DELETE {{ baseURL }}/cart/1
+Content-Type: application/json
+
+{
+  "ids": [13]
+}

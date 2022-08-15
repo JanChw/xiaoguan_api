@@ -1,6 +1,8 @@
 # baseURL
 @baseURL = http://localhost:3000
 
+@authorization = bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwNDQ0MjMwLCJleHAiOjE2NjEwNDkwMzB9.vuVpgcCQ7ZVqADsuLeoYsXTGxTCbL7riG-7DNmYMmQM
+
 ###
 # Find All Users
 GET {{ baseURL }}/users
@@ -15,9 +17,19 @@ POST {{ baseURL }}/signup
 Content-Type: application/json
 
 {
-  "phone": "+8615172435972",
+  "phone": "+8615172435973",
 	"password": "123456"
 }
+
+###
+POST {{ baseURL }}/user/login
+Content-Type: application/json
+
+{
+  "phone": "+8615172435973",
+	"password": "123456"
+}
+
 
 ###
 # Modify User By Id
