@@ -1,20 +1,26 @@
-import { Body, BodyParam, Controller, Delete, Get, Param, Post, QueryParam } from 'routing-controllers'
+import { Body, BodyParam, Controller, CurrentUser, Delete, Get, Param, Post, QueryParam } from 'routing-controllers'
 import randomStr from 'randomstring'
 import { OrderService } from '@/services/orders.service'
 import { Order } from '@/types/interfaces/orders.interface'
 import { OpenAPI } from 'routing-controllers-openapi'
+import { User } from '@/types/interfaces/users.interface'
 
 @Controller()
 export class OrdersController {
   public orderService = new OrderService()
+
+  @Get('/orders/generate/code')
+  @OpenAPI({ summary: 'generate a code for order' })
   async generateOrderCode (): Promise<string> {
-    return randomStr.generate({ length: 18, charset: 'numeric' })
+    return randomStr.generate({ length: 19, charset: 'numeric' })
   }
 
   @Post('/orders')
   @OpenAPI({ summary: 'create a order' })
-  async createOrder (userId: number, @BodyParam('token') token: string) {
-    const order: Order = await this.orderService.createOrder(userId, token)
+  async createOrder (@CurrentUser() user: User, @BodyParam('code') code: string) {
+    console.log(user)
+    const order: Order = await this.orderService.createOrder(user.id, code)
+    console.log(order)
     return { data: order, message: 'create order' }
   }
 
@@ -23,12 +29,7 @@ export class OrdersController {
   async searchFullText (@QueryParam('content') content: string) {
     const data: Order[] = content
       ? await this.orderService.search(content)
-      : await this.orderService.getAll({
-        where: {
-          isDeleted: false
-        },
-        include: { specs: true }
-      })
+      : await this.orderService.getAll({ include: { specs: true } })
 
     return { data, message: 'search' }
   }

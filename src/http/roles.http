@@ -1,6 +1,8 @@
 # baseURL
 @baseURL = http://localhost:3000
 
+@authorization = bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjYwNjM1MDYyLCJleHAiOjE2NjEyMzk4NjJ9.dvt-07GdyeUwfHD8E39LLnTAaUONpHV0AQiN1gsRYHg
+
 ###
 # Find All roles
 GET {{ baseURL }}/roles
@@ -8,6 +10,7 @@ GET {{ baseURL }}/roles
 ###
 # Find User By Id
 GET {{ baseURL }}/roles/1
+Authorization: {{ authorization }}
 
 ###
 # Find User By Id
@@ -25,11 +28,20 @@ Content-Type: application/json
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/roles/1/permissions?type=add
+PUT {{ baseURL }}/roles/1/add/permissions
 Content-Type: application/json
 
 {
-	"ids": [1, 4]
+	"ids": [19, 20]
+}
+
+###
+# Modify User By Id
+PUT {{ baseURL }}/roles/1/remove/permissions
+Content-Type: application/json
+
+{
+	"ids": [13]
 }
 
 ###

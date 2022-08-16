@@ -23,7 +23,7 @@ const _selectOpts = {
 }
 
 // 修改 查询 删除
-class UserService {
+export class UserService {
   public async findUser (opts: Partial<User>): Promise<User> {
     const user: User = await db.user.findFirst({ where: opts, select: selectOpts })
     return user

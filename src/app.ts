@@ -16,6 +16,7 @@ import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config'
 import errorMiddleware from '@middlewares/error.middleware'
 import { logger, stream } from '@utils/logger'
 import authorizationChecker from '@/middlewares/authorization.middleware'
+import currentUserChecker from './middlewares/currentUser.middleware'
 
 const app = express()
 
@@ -70,7 +71,8 @@ export class App {
       },
       controllers,
       defaultErrorHandler: false,
-      authorizationChecker
+      authorizationChecker,
+      currentUserChecker
     })
   }
 

@@ -99,8 +99,6 @@ model cart {
   userId Int @unique
   user user @relation(fields: [userId], references: [id])
   cartItems cartItem[]
-  totalQty Int  @map("total_qty") @default(0)
-  totalPrice Decimal @map("total_price") @default(0.0)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -112,8 +110,8 @@ model cartItem {
   id Int @id @unique @default(autoincrement())
   price Decimal
   qty Int
-  totalPrice Decimal
   specId Int
+  itemStatus ItemStatus @default(IN_CART)
   spec spec @relation(fields: [specId], references: [id])
   cartId Int
   cart cart @relation(fields: [cartId], references: [id])
@@ -237,4 +235,9 @@ enum Resource {
   MENU
   CONTENT
   ACTION_BUTTON
+}
+
+enum ItemStatus {
+  IN_CART
+  IN_ORDER
 }

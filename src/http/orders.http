@@ -1,0 +1,37 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+@authorization = bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwNDQ0MjMwLCJleHAiOjE2NjEwNDkwMzB9.vuVpgcCQ7ZVqADsuLeoYsXTGxTCbL7riG-7DNmYMmQM
+
+
+###
+# find user cart
+GET {{ baseURL }}/orders/2
+
+###
+# generate a token
+GET {{ baseURL }}/orders/generate/code
+
+
+###
+# create a order
+Post {{ baseURL }}/orders
+Content-Type: application/json
+Authorization: {{ authorization }}
+
+{
+  "code": "8608893201826835972"
+}
+
+
+
+
+
+###
+# Delete cartItems
+DELETE {{ baseURL }}/user/1/cart/remove
+Content-Type: application/json
+
+{
+  "ids": [19]
+}

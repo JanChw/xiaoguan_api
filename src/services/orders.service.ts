@@ -5,21 +5,45 @@ import { Order } from '@/types/interfaces/orders.interface'
 import { isEmpty } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
 import { CartService } from './carts.service'
+import { ItemStatus } from '@/types/enums/cartItem.enum'
+
 @CRUD('order')
 export class OrderService {
   public cartServer = new CartService()
-  async createOrder (userId: number, token) {
-    const cart: Cart = await this.cartServer.getOne(userId)
-    if (!cart.cartItems.length) throw new HttpError(400, '购物车为空')
-    const order: Order = await db.order.create({
+
+  async createOrder (userId: number, code) {
+    const { cartItems }: Cart = await this.cartServer.getOne(userId)
+    if (!cartItems.length) throw new HttpError(400, '购物车为空')
+
+    const orderPms = db.order.create({
       data: {
-        code: token,
-        products: cart.cartItems,
-        totalQty: cart.totalQty,
-        totalPrice: cart.totalPrice,
-        userId: cart.userId
-      }
+        code,
+        totalQty: cartItems.reduce((pre, current) => pre + current.qty, 0),
+        totalPrice: cartItems.reduce((pre, { qty, price }) => pre + qty * price, 0),
+        userId,
+        products: {
+          connect: cartItems.map(item => ({ id: item.id }))
+        }
+      },
+      include: { products: true }
     })
+    const cartPms = db.cart.update({
+      where: { userId },
+      data: {
+        cartItems: {
+          updateMany: {
+            where: {},
+            data: {
+              itemStatus: ItemStatus.IN_ORDER
+            }
+          }
+        }
+      },
+      include: { cartItems: true }
+    })
+
+    const [, order] = await db.$transaction([cartPms, orderPms])
+
     return order
   }
 
@@ -41,7 +65,7 @@ export class OrderService {
   }
 
   async getAllOrderByUserId (userId: number) {
-    const orders: Order[] = await db.order.findMany({ where: { userId } })
+    const orders: Order[] = await db.order.findMany({ where: { userId }, include: { products: true } })
     return orders
   }
 }

@@ -4,7 +4,7 @@ import validateEnv from '@utils/validateEnv'
 import { loadFiles } from '@/utils/util'
 
 async function runApp () {
-  const controllers = await loadFiles('./src/controllers', ['!(message|orders).controller.ts'])
+  const controllers = await loadFiles('./src/controllers', ['!(message).controller.ts'])
 
   validateEnv()
 

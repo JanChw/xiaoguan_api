@@ -12,9 +12,6 @@ export class CartItemDto {
 
   @IsInt()
   cartId: number
-
-  @IsNumber()
-  totalPrice: number
 }
 
 export class CartQtyDto {

@@ -19,7 +19,7 @@ export class RolesController {
   }
 
   @Get('/roles/:id')
-  @Authorized('role:find')
+  // @Authorized('role:find')
   @OpenAPI({ summary: 'return a role' })
   async getRoleById (@Param('id') id: number) {
     const data: Role = await this.roleService.getOneById(id)
@@ -41,12 +41,18 @@ export class RolesController {
     return { data, message: 'create a role' }
   }
 
-  @Put('/roles/:id/permissions')
-  @OpenAPI({ summary: 'operate permissions for a role with type query parameters' })
-  async addPermissionsToRole (@BodyParam('ids') permissionIDs: number[], @Param('id') roleId: number, @QueryParam('type') op: opPermission) {
-    console.log(op)
-    const data = await this.roleService.opPermissionsToRole(permissionIDs, roleId, op)
+  @Put('/roles/:id/add/permissions')
+  @OpenAPI({ summary: 'add permissions for a role' })
+  async addPermissionsToRole (@BodyParam('ids') permissionIDs: number[], @Param('id') roleId: number) {
+    const data = await this.roleService.addPermissionsToRole(permissionIDs, roleId)
     return { data, message: 'add permissions to a role' }
+  }
+
+  @Put('/roles/:id/remove/permissions')
+  @OpenAPI({ summary: 'remove permissions for a role' })
+  async removePermissionsToRole (@BodyParam('ids') permissionIDs: number[], @Param('id') roleId: number) {
+    const data = await this.roleService.removePermissionsToRole(permissionIDs, roleId)
+    return { data, message: 'remove permissions to a role' }
   }
 
   @Put('/roles/:id')

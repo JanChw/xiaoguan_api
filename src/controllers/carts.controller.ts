@@ -26,8 +26,8 @@ export class CartsController {
 
   @Put('/user/:userId/cart/add')
   @OpenAPI({ summary: 'add item to cart' })
-  @UseBefore(validationMiddleware(CartItemDto, 'body'))
-  async addItemToCart (@Param('userId') userId: number, @Body() item: CartItemDto) {
+  @UseBefore(validationMiddleware(CartItemDto, 'body', true))
+  async addItemToCart (@Param('userId') userId: number, @Body() item: Partial<CartItemDto>) {
     const cart: Cart = await this.cartService.addItemToCart(item, userId)
     return cart
   }

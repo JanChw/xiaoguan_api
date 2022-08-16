@@ -5,17 +5,17 @@ const db = new PrismaClient()
 
 db.$use(async (params, next) => {
   const transformTables = ['food', 'spec', 'service', 'cart', 'order', 'cartItem']
-  try {
-    const result = await next(params)
+  // try {
+  const result = await next(params)
 
-    if (transformTables.includes(params.model)) {
-      transformDecimalsToNumber(result)
-    }
-
-    return result
-  } catch (error) {
-    // console.log(error.message)
+  if (transformTables.includes(params.model)) {
+    transformDecimalsToNumber(result)
   }
+
+  return result
+  // } catch (error) {
+  //   console.log(error.message)
+  // }
 })
 
 db.$connect().catch(console.log)

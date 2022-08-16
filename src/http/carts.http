@@ -1,29 +1,38 @@
 # baseURL
 @baseURL = http://localhost:3000
 
-@authorization = bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwNDQ0MjMwLCJleHAiOjE2NjEwNDkwMzB9.vuVpgcCQ7ZVqADsuLeoYsXTGxTCbL7riG-7DNmYMmQM
+@authorization = bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwNTU2MTc5LCJleHAiOjE2NjExNjA5Nzl9.9UUOmPOB8mYdwWmnJ2nghLCVd-ojnup-8iugyUq4MEA
 
 ###
 # find user cart
-GET {{ baseURL }}/user/1/cart
+GET {{ baseURL }}/user/2/cart
 
 
 ###
 # clear cart
-PUT {{ baseURL }}/user/1/cart/clear
+PUT {{ baseURL }}/user/2/cart/clear
 
 
 ###
 # add item to cart
-PUT {{ baseURL }}/user/1/cart/add 
+PUT {{ baseURL }}/user/2/cart/add 
 Content-Type: application/json
 
 {
   "price": 14.0,
-  "qty": 1,
+  "qty": 2,
   "specId": 1,
-  "cartId": 2,
   "totalPrice": 14.0
+}
+
+###
+# update item qty
+PUT {{ baseURL }}/user/2/cart/item/qty
+Content-Type: application/json
+
+{
+  "id": 51,
+  "qty": 3
 }
 
 
@@ -32,9 +41,9 @@ Content-Type: application/json
 
 ###
 # Delete cartItems
-DELETE {{ baseURL }}/cart/1
+DELETE {{ baseURL }}/user/2/cart/remove
 Content-Type: application/json
 
 {
-  "ids": [13]
+  "ids": [41, 40]
 }
