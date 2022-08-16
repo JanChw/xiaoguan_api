@@ -6,6 +6,7 @@ import { isEmpty } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
 import { CartService } from './carts.service'
 import { ItemStatus } from '@/types/enums/cartItem.enum'
+import { Decimal } from '@prisma/client/runtime'
 
 @CRUD('order')
 export class OrderService {
@@ -15,11 +16,15 @@ export class OrderService {
     const { cartItems }: Cart = await this.cartServer.getOne(userId)
     if (!cartItems.length) throw new HttpError(400, '购物车为空')
 
+    const totalQty = cartItems.reduce((pre, current) => Decimal.add(pre, current.qty).toNumber(), 0)
+    const totalPrice = cartItems.reduce((pre, { qty, price }) => Decimal.add(pre, Decimal.mul(qty, price)).toNumber(), 0)
+    // const totalQty = cartItems.reduce((pre, current) => pre + current.qty, 0)
+    // const totalPrice = cartItems.reduce((pre, { qty, price }) => pre + qty * price, 0)
     const orderPms = db.order.create({
       data: {
         code,
-        totalQty: cartItems.reduce((pre, current) => pre + current.qty, 0),
-        totalPrice: cartItems.reduce((pre, { qty, price }) => pre + qty * price, 0),
+        totalQty,
+        totalPrice,
         userId,
         products: {
           connect: cartItems.map(item => ({ id: item.id }))

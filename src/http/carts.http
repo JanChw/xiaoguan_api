@@ -19,10 +19,9 @@ PUT {{ baseURL }}/user/2/cart/add
 Content-Type: application/json
 
 {
-  "price": 14.0,
-  "qty": 2,
-  "specId": 1,
-  "totalPrice": 14.0
+  "price": 0.2,
+  "qty": 1,
+  "specId": 1
 }
 
 ###

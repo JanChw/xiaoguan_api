@@ -11,16 +11,15 @@ export class OrdersController {
 
   @Get('/orders/generate/code')
   @OpenAPI({ summary: 'generate a code for order' })
-  async generateOrderCode (): Promise<string> {
-    return randomStr.generate({ length: 19, charset: 'numeric' })
+  async generateOrderCode () {
+    const data = randomStr.generate({ length: 19, charset: 'numeric' })
+    return { data, message: 'get a random code' }
   }
 
   @Post('/orders')
   @OpenAPI({ summary: 'create a order' })
   async createOrder (@CurrentUser() user: User, @BodyParam('code') code: string) {
-    console.log(user)
     const order: Order = await this.orderService.createOrder(user.id, code)
-    console.log(order)
     return { data: order, message: 'create order' }
   }
 
