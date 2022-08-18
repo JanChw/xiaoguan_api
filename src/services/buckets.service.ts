@@ -31,24 +31,41 @@ export class BucketService {
     return bucket
   }
 
-  public async createBucket (bucketData: BucketDto): Promise<BucketDto> {
+  public async createBucket (bucketData: BucketDto): Promise<Bucket> {
     if (isEmpty(bucketData.name)) throw new HttpError(400, 'name参数不能为空')
 
     const _bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketData.name } })
     if (_bucket) throw new HttpError(409, `${bucketData.name} bucket already exists`)
 
-    const bucketPms = db.bucket.create({ data: bucketData })
-    const minioPms = makeBucket(bucketData.name)
+    let errMassage = ''
+    const bucketPms = db.bucket.create({ data: bucketData }).catch(err => {
+      errMassage = err.message
+      removeBucket(bucketData.name)
+    })
+
+    const minioPms = makeBucket(bucketData.name).catch(err => {
+      errMassage = err.message
+      db.bucket.delete({ where: { name: bucketData.name } })
+    })
+
     const [bucket] = await Promise.all([bucketPms, minioPms])
+    if (errMassage) throw new Error(errMassage)
+
     return bucket
   }
 
   public async deleteBucket (bucketName: string): Promise<Bucket> {
-    const _bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketName } })
-    if (!_bucket) throw new HttpError(409, `${bucketName} 不存在`)
+    const findBucket: Bucket = await db.bucket.findFirst({
+      where: { name: bucketName },
+      select: {
+        name: true, isDefault: true, files: { select: { id: true } }
+      }
+    })
+    if (!findBucket) throw new HttpError(409, `${bucketName} 不存在`)
 
-    const findBucket = await db.bucket.findUnique({ where: { name: bucketName } })
     if (findBucket.isDefault) throw new HttpError(403, '不能删除默认的文件桶')
+
+    if (findBucket.files.length) throw new Error('文件桶内还存有文件，删除失败')
 
     const bucketPms = db.bucket.delete({ where: { name: bucketName } })
     const minioPms = removeBucket(bucketName)

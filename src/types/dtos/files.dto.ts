@@ -1,7 +1,7 @@
 import { Media } from '@/types/enums/files.enum'
-import { IsBoolean, IsIn, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
+import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
 
-export class CreateFileDto {
+export class FileDto {
   @IsString()
   public filename: string;
 
@@ -24,10 +24,20 @@ export class CreateFileDto {
 
 export class FileOptionalInfoDto {
   @IsBoolean()
+  @IsOptional()
   public isCollected: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  public originName?: string;
+
+  @IsIn(['IMAGE', 'VEDIO', 'AUDIO', 'TEXT'])
+  @IsOptional()
+  fileType?: Media
 }
 
-export class FileRemoteAddress {
+export class FileRemoteAddressDto {
   @IsUrl()
   public url: string;
 }

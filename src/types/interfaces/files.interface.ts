@@ -8,7 +8,14 @@ export interface File {
 }
 
 export interface SearchFileOption {
-  bucketname: string;
+  bucketname?: string;
   originName?: string;
   isCollected?: boolean;
+  fileType?: Media
+}
+
+export interface FileQueryOption {
+  originName?: string;
+  isCollected?: boolean;
+  fileType?: Media
 }

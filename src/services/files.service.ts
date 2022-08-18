@@ -3,7 +3,7 @@ import { Bucket } from '@/types/interfaces/buckets.interface'
 import { File, SearchFileOption } from '@/types/interfaces/files.interface'
 import { isEmpty, generateFilename } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
-import { removeObjects, putObject } from '@/utils/minio'
+import { removeObjects, putObject, removeObject } from '@/utils/minio'
 import { convertToWebpOrAvif } from '@/utils/opImage'
 import { FileOptionalInfoDto } from '@/types/dtos/files.dto'
 import path from 'path'
@@ -14,24 +14,31 @@ import { request } from 'undici'
 export class FileService {
   public bucketService: BucketService = new BucketService()
 
-  async findAllFilesByBucketName (opts: SearchFileOption): Promise<File[]> {
-    const { bucketname, originName, isCollected } = opts
-    if (isEmpty(bucketname)) throw new HttpError(400, 'bucketName 不能为空')
-    const bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketname } })
-    if (!bucket) throw new HttpError(409, `${bucketname} 不存在`)
+  async findFiles (opts?: SearchFileOption): Promise<File[]> {
+    const { bucketname, originName, isCollected, fileType } = opts || {}
 
-    let condition = { where: { bucketId: bucket.id } }
+    const condition = { where: {} }
+
+    if (bucketname.length) {
+      const bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketname } })
+      if (!bucket) throw new HttpError(409, `${bucketname} 不存在`)
+      Object.assign(condition.where, { bucketId: bucket.id })
+    }
 
     if (originName) {
-      condition = { where: { originName: { contains: originName } } }
+      Object.assign(condition.where, { originName: { contains: originName } })
     }
+
     if (isCollected) {
-      condition = { where: { isCollected: true } }
+      Object.assign(condition.where, { isCollected })
+    }
+
+    if (fileType) {
+      Object.assign(condition.where, { fileType })
     }
 
     const files: File[] = await db.file.findMany(condition)
 
-    // await delay(5000)
     return files
   }
 
@@ -56,10 +63,18 @@ export class FileService {
     if (statusCode !== 200) throw new HttpError(400, '网络图片请求失败')
 
     const data = await convertToWebpOrAvif(body)
-    const uploadPms = putObject(bucketname, filename, data)
-    const filePms = db.file.create({ data: file })
+    let errMessage = ''
+    const uploadPms = putObject(bucketname, filename, data).catch(err => {
+      errMessage = err.message
+      db.file.delete({ where: { filename } })
+    })
+    const filePms = db.file.create({ data: file }).catch(err => {
+      errMessage = err.message
+      removeObject(bucketname, filename)
+    })
 
     const [, img] = await Promise.all([uploadPms, filePms])
+    if (errMessage) throw new Error(errMessage)
     return img
   }
 
@@ -70,38 +85,60 @@ export class FileService {
 
     if (!bucket) throw new HttpError(400, '存储桶不存在')
 
+    let errMessage = ''
     const bucketId = bucket.id
 
     const files = filesData.map(_mapToUploadFile(bucketname, bucketId))
 
-    // const _files: File[] = await db.file.createMany({ data: files, skipDuplicates: true })
-    //   .catch(async (err) => {
-    //     console.error(err)
-    //     const filenames = filesData.map(file => file.filename)
-    //     await removeObjects(bucketname, filenames)
-    //   })
-
     const _files: File[] = await db.$transaction(
       files.map((file) => db.file.create({ data: file })))
       .catch(async (err) => {
-        console.error(err)
+        console.log('error--------------')
+        errMessage = err.message
         const filenames = filesData.map(file => file.filename)
         await removeObjects(bucketname, filenames)
       })
 
+    if (errMessage) throw new Error(errMessage)
+
     return _files
   }
 
-  async removeFiles (bucketname: string, filenames: string[]): Promise<File[]> {
+  async removeFiles (bucketname: string, filenames: string[]) {
     if (isEmpty(bucketname) || isEmpty(filenames)) throw new HttpError(400, 'bucketName和filenames都不能为空')
 
     const _bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketname } })
     if (!_bucket) throw new HttpError(409, `${bucketname} 不存在`)
 
-    const dbPms = db.file.deleteMany({ where: { filename: { in: filenames } } })
-    const mnPms = removeObjects(bucketname, filenames)
-    const [result] = await Promise.all([dbPms, mnPms])
-    console.log(result)
+    let errMessage = ''
+    const files: File[] = await db.file.findMany({
+      where: { filename: { in: filenames } },
+      select: {
+        filename: true, originName: true, isCollected: true, url: true, fileType: true, bucketId: true, foodId: true, banners: true
+      }
+    })
+
+    if (!files.length) throw new Error('文件不存在')
+
+    const result = await db.file.deleteMany({ where: { filename: { in: filenames } } }).then(async (data) => {
+      await removeObjects(bucketname, filenames).catch(err => {
+        errMessage = err.message
+        Promise.all(files.map(({ banners, ...fileData }) => {
+          return db.file.create({
+            data: {
+              ...fileData,
+              banners: {
+                connect: banners.map(banner => ({ id: banner.id }))
+              }
+            }
+          })
+        }))
+      })
+      return data
+    }).catch(err => (errMessage = err.message))
+
+    if (errMessage) throw new Error(errMessage)
+
     return result
   }
 }

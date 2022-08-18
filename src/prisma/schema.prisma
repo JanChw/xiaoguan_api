@@ -179,7 +179,7 @@ model file {
   updatedAt  DateTime @updatedAt @map("updated_at")
   bucketId   Int
   bucket     bucket   @relation(fields: [bucketId], references: [id])
-  banner banner[]
+  banners banner[]
   foodId     Int?
   food       food? @relation(fields: [foodId], references: [id])
   

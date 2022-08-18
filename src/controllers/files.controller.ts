@@ -1,7 +1,7 @@
 import { FileService } from '@/services/files.service'
-import { FileOptionalInfoDto, FileRemoteAddress } from '@/types/dtos/files.dto'
+import { FileOptionalInfoDto, FileRemoteAddressDto } from '@/types/dtos/files.dto'
 import { File } from '@/types/interfaces/files.interface'
-import { Body, BodyParam, Controller, Delete, Get, HttpCode, HttpError, Param, Post, Put, QueryParam, UploadedFiles, UseBefore } from 'routing-controllers'
+import { Body, BodyParam, Controller, Delete, Get, HttpCode, HttpError, Param, Post, Put, QueryParams, UploadedFiles, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import MinioStroage from '@/utils/storage'
 import { isEmpty } from '@/utils/util'
@@ -13,8 +13,8 @@ export class FilesController {
 
   @Get('/files/:bucketName')
   @OpenAPI({ summary: 'Return a list of files' })
-  async findFilesWithBucket (@Param('bucketName') bucketname: string, @QueryParam('name') originName: string) {
-    const files: File[] = await this.fileService.findAllFilesByBucketName({ bucketname, originName })
+  async findFilesWithBucket (@Param('bucketName') bucketname: string, @QueryParams() query: FileOptionalInfoDto) {
+    const files: File[] = await this.fileService.findFiles({ bucketname, ...query })
     return { data: files, message: 'find files' }
   }
 
@@ -37,7 +37,7 @@ export class FilesController {
   // TODO:upload from url
   @Post('/files/upload/:bucketname/remote')
   @HttpCode(201)
-  @UseBefore(validationMiddleware(FileRemoteAddress, 'body'))
+  @UseBefore(validationMiddleware(FileRemoteAddressDto, 'body'))
   @OpenAPI({ summary: 'Upload a file from url' })
   async uploadFileFromUrl (@Param('bucketname') bucketname: string, @BodyParam('url') url: string) {
     if (isEmpty(bucketname)) throw new HttpError(500, '传入参数非法')

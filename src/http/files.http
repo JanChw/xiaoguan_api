@@ -11,7 +11,7 @@ GET {{ baseURL }}/files/1
 
 ###
 # upload a file from url
-POST {{ baseURL }}/files/upload/test/remote
+POST {{ baseURL }}/files/upload/blog/remote
 Content-Type: application/json
 
 {
@@ -36,5 +36,5 @@ DELETE {{ baseURL }}/files/test
 Content-Type: application/json
 
 {
-  "filenames": ["Nf1E56f.webp"]
+  "filenames": ["Aopvhdq.webp", "lx2mFWl.webp"]
 }

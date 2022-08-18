@@ -20,8 +20,9 @@ export const removeBucket = async (bucketname: string) => {
   await mc.removeBucket(bucketname)
 }
 
-export const removeObject = async (bucketname: string, objectname: string, cb: Function) => {
+export const removeObject = async (bucketname: string, objectname: string, cb?: Function) => {
   const result = await mc.removeObject(bucketname, objectname)
+  cb && cb()
   return result
 }
 

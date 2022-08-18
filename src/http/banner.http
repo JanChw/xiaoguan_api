@@ -15,20 +15,21 @@ POST {{ baseURL }}/banners
 Content-Type: application/json
 
 {
- "name": "广告",
+ "name": "广告2",
  "links": {
   "baidu": "http://www.baidu.com",
   "google": "http://www.google.com"
- }
+  },
+ "imgs": [1, 2]
 }
 
 ###
 # add img to banner
-PUT {{ baseURL }}/banners/1/add/img
+PUT {{ baseURL }}/banners/1/remove/img
 Content-Type: application/json
 
 {
- "imgs": [4, 5]
+ "imgs": [5]
 }
 
 
