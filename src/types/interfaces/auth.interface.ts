@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { User } from '@/types/interfaces/users.interface'
+import { User } from '@/types/interfaces/user.interface'
 
 export interface DataStoredInToken {
   id: number;

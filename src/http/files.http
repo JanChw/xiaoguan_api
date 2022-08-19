@@ -36,5 +36,5 @@ DELETE {{ baseURL }}/files/test
 Content-Type: application/json
 
 {
-  "filenames": ["Aopvhdq.webp", "lx2mFWl.webp"]
+  "filenames": ["nV6xZDk.webp"]
 }

@@ -20,18 +20,15 @@ export default function CRUD (model: string) {
         return repository
       },
 
-      getOneWithManyToManyRelations: async (opts) => {
-        if (isEmpty(opts)) throw new HttpError(400, '参数不能为空')
-
-        const repository = await Model.findMany(opts)
-        if (!repository) throw new HttpError(404, `${model} 不存在`)
-
-        return repository
-      },
-
       create: async (entity: any, opts = {}) => {
         if (isEmpty(entity)) throw new HttpError(400, '参数不能为空')
         return await Model.create(Object.assign(opts, { data: entity }))
+      },
+      createWithRelations: async (entity: any, relation: string, relations: number[], opts = {}) => {
+        if (isEmpty(entity) || isEmpty(relations) || isEmpty(relation)) throw new HttpError(400, '参数不能为空')
+        const relationObj = {}
+        relationObj[relation] = { connect: relations.map(id => ({ id })) }
+        return await Model.create(Object.assign(opts, { data: entity, ...relationObj }))
       },
 
       createWithUnique: async (entity: any, unique?: string) => {
@@ -65,8 +62,17 @@ export default function CRUD (model: string) {
         if (isEmpty(id) || isEmpty(entity)) throw new HttpError(400, '参数不能为空')
         const _entity = await Model.findFirst({ where: { id } })
         if (!_entity) { throw new Error(`要更新的${model}不存在`) }
-        console.log({ data: entity })
+
         return await Model.update(Object.assign(opts, { where: { id }, data: entity }))
+      },
+      updateRelations: (relation, relationIds, op: 'add'| 'remove') => async (id: number, opts = {}) => {
+        const self = crud
+        const entity = {}
+
+        op === 'add' && (entity[relation] = { connect: relationIds.map(id => ({ id })) })
+        op === 'remove' && (entity[relation] = { disconnect: relationIds.map(id => ({ id })) })
+
+        return await self.update(id, entity, opts)
       },
 
       updates: async (ids: number[], entity: any, opts = {}) => {
@@ -75,6 +81,6 @@ export default function CRUD (model: string) {
       }
     }
 
-    target.prototype = Object.assign(target.prototype, crud)
+    Object.assign(target.prototype, crud)
   }
 }

@@ -22,10 +22,10 @@ Content-Type: application/json
 Authorization: {{ authorization }}
 
 {
-  "name": "莲子汤",
+  "name": "鸡汤",
 	"imgUrl": "http://localhost:8080/food/xx.png",
   "desc": "汤类",
-  "detail": "老少皆宜，可口美味"
+  "detail": "老少皆宜，可口美味" 
 }
 
 ###

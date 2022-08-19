@@ -7,7 +7,7 @@ GET {{ baseURL }}/banners
 
 ###
 # Find banner By Id
-GET {{ baseURL }}/banners/1
+GET {{ baseURL }}/banners/10
 
 ###
 # Create banner
@@ -15,31 +15,31 @@ POST {{ baseURL }}/banners
 Content-Type: application/json
 
 {
- "name": "广告2",
+ "name": "广告",
  "links": {
   "baidu": "http://www.baidu.com",
   "google": "http://www.google.com"
   },
- "imgs": [1, 2]
+ "imgs": [13, 17, 18]
 }
 
 ###
-# add img to banner
-PUT {{ baseURL }}/banners/1/remove/img
+# remove img from banner
+PUT {{ baseURL }}/banners/10/remove/img
 Content-Type: application/json
 
 {
- "imgs": [5]
+ "imgs": [13]
 }
 
 
 ###
 # add img to banner
-PUT {{ baseURL }}/banners/1/remove/img
+PUT {{ baseURL }}/banners/10/add/img
 Content-Type: application/json
 
 {
- "imgs": [4]
+ "imgs": [22, 23]
 }
 
 ###

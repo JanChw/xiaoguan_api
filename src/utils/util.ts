@@ -1,6 +1,5 @@
 import randomStr from 'randomstring'
 import { Format } from '@/utils/constant'
-// import { globby } from 'globby'
 import { join } from 'path'
 import fg from 'fast-glob'
 /**

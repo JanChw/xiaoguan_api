@@ -1,6 +1,6 @@
 import { Action, HttpError } from 'routing-controllers'
 import { verify } from 'jsonwebtoken'
-import { StaffService } from '@/services/staffs.service'
+import { StaffService } from '@/services/staff.service'
 const { SECRET_KEY } = process.env
 const JWT_INVALID = 'invalid signature'
 const JWT_EXPIRED = 'jwt expired'

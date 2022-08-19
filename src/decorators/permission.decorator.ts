@@ -1,4 +1,4 @@
-import { ResourceService } from '@/services/resources.service'
+import { ResourceService } from '@/services/resource.service'
 export function AddPermssion (title, permission) {
   let once = false
   return function (target, key, descriptor) {

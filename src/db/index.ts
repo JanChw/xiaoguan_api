@@ -4,7 +4,7 @@ import { transformDecimalsToNumber } from './transformDecimalToNumber'
 const db = new PrismaClient()
 
 db.$use(async (params, next) => {
-  const transformTables = ['food', 'spec', 'service', 'cart', 'order', 'cartItem']
+  const transformTables = ['food', 'spec', 'service', 'cart', 'order', 'cartItem', 'category']
   // try {
   const result = await next(params)
 

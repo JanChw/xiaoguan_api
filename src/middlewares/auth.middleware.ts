@@ -3,7 +3,7 @@ import { verify } from 'jsonwebtoken'
 import { SECRET_KEY } from '@config'
 import { HttpException } from '@exceptions/HttpException'
 import { DataStoredInToken, RequestWithUser } from '@/types/interfaces/auth.interface'
-import UserService from '@/services/users.service'
+import UserService from '@/services/user.service'
 
 const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   const userService = new UserService()

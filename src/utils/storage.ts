@@ -1,6 +1,5 @@
 import { putObject, removeObject } from '@/utils/minio'
-// import { convertToWebpOrAvif } from './opImage'
-import { BucketService } from '@/services/buckets.service'
+import { BucketService } from '@/services/bucket.service'
 import { generateFilename } from './util'
 
 const bucketService = new BucketService()

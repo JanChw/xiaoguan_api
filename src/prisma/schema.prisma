@@ -134,9 +134,10 @@ model food {
   isDeleted Boolean? @default(false)
   name        String    @unique
   discount    Decimal? @default(1.00) @db.Decimal(3, 2)
-  originPrice Decimal? @db.Decimal(4, 2)
+  originPrice Decimal? @default(0.00) @db.Decimal(4, 2)
   images  file[]
   specs       spec[]
+  categories category[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -155,6 +156,16 @@ model spec {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("specs")
+}
+
+model category {
+  id Int @id @unique @default(autoincrement())
+  pid Int @default(0)
+  name String @unique
+  foods food[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
 }
 
 model bucket {

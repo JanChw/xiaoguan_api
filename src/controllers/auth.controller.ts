@@ -1,9 +1,7 @@
 import { Response } from 'express'
 import { Controller, Body, Post, UseBefore, HttpCode, Res, Param } from 'routing-controllers'
-import { UserDto, LoginDto } from '@/types/dtos/users.dto'
-// import { RequestWithUser } from '@/types/interfaces/auth.interface'
-import { User } from '@/types/interfaces/users.interface'
-// import authMiddleware from '@middlewares/auth.middleware'
+import { UserDto, LoginDto } from '@/types/dtos/user.dto'
+import { User } from '@/types/interfaces/user.interface'
 import { validationMiddleware } from '@middlewares/validation.middleware'
 import AuthService from '@services/auth.service'
 

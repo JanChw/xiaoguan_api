@@ -19,7 +19,7 @@ POST {{ baseURL }}/buckets
 Content-Type: application/json
 
 {
- "name": "xiaoguan"
+ "name": "blog"
 }
 
 ###
