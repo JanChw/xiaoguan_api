@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsBoolean, IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator'
 
 export class AddressDto {
   @IsNumber()
@@ -10,4 +10,21 @@ export class AddressDto {
   @IsBoolean()
   @IsOptional()
   isDefault: Boolean;
+}
+
+export class SearchAddressDto {
+  @IsString()
+  address: String;
+
+  @IsNumberString()
+  @IsOptional()
+  page: String
+
+  @IsNumberString()
+  @IsOptional()
+  size: String
+
+  @IsString()
+  @IsOptional()
+  orderby: String
 }

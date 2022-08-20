@@ -7,6 +7,7 @@ import { HttpError } from 'routing-controllers'
 import { CartService } from './cart.service'
 import { ItemStatus } from '@/types/enums/cartItem.enum'
 import { Decimal } from '@prisma/client/runtime'
+import { OrderQueryDto } from '@/types/dtos/order.dto'
 
 @CRUD('order')
 export class OrderService {
@@ -52,21 +53,20 @@ export class OrderService {
     return order
   }
 
-  public async search (content: string): Promise<Order[]> {
-    if (isEmpty(content)) throw new HttpError(400, '参数不能为空')
+  public async search (query: OrderQueryDto): Promise<Order[] > {
+    if (isEmpty(query)) throw new HttpError(400, '参数不能为空')
+    const include = { products: true }
 
-    const data: Order[] = await db.order.findMany({
-      where: {
-        code: {
-          search: content
-        },
-        status: {
-          search: content
-        }
-      }
-    })
+    const { code, status } = query
+    const where = {}
 
-    return data
+    code && Object.assign(where, { code: { contains: code } })
+
+    status && Object.assign(where, { status })
+
+    console.log(where)
+
+    return await db.order.findMany({ where, include })
   }
 
   async getAllOrderByUserId (userId: number) {

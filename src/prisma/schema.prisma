@@ -240,6 +240,7 @@ enum PaymentStatus {
   UNPAID
   PAYING
   PAID
+  PAY_FAILED
 }
 
 enum Resource {

@@ -1,8 +1,10 @@
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { CategoryService } from '@/services/category.service'
 import { CategoryDto } from '@/types/dtos/category.dto'
+import { PaginationAndOrderByDto } from '@/types/dtos/common.dto'
 import { Category } from '@/types/interfaces/category.interface'
-import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParam, UseBefore } from 'routing-controllers'
+import { ResultWithCount } from '@/types/interfaces/common.interface'
+import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParam, QueryParams, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
 @Controller()
@@ -11,13 +13,12 @@ export class CategoryController {
 
   @Get('/categories')
   @OpenAPI({ summary: 'get a list of category' })
-  async getCategories (@QueryParam('include') include: boolean) {
-    const condition = {}
-    include && Object.assign(condition, { include: { foods: true } })
-    const data: Category[] = await this.categoryService.getAll(condition)
+  async getCategories (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const data: ResultWithCount = await this.categoryService.getAllWithPagination(queryData)({ include: { foods: true } })
     return { data, message: 'get a list of category' }
   }
 
+  // TODO:关联数据分页
   @Get('/category/:id/foods')
   @OpenAPI({ summary: 'get a category by id' })
   async getOne (@Param('id') id: number) {

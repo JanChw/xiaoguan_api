@@ -8,6 +8,11 @@
 # find user cart
 GET {{ baseURL }}/orders/2
 
+
+###
+# find user cart
+GET {{ baseURL }}/orders/search?status=UNPAID
+
 ###
 # generate a token
 GET {{ baseURL }}/orders/generate/code

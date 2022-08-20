@@ -28,11 +28,11 @@ Content-Type: application/json
 
 ###
 # Modify User By Id
-PUT {{ baseURL }}/roles/1/add/permissions
+PUT {{ baseURL }}/role/1/add/permissions
 Content-Type: application/json
 
 {
-	"ids": [19, 20]
+	"ids": [135]
 }
 
 ###

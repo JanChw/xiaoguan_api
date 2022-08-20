@@ -1,7 +1,7 @@
 # baseURL
 @baseURL = http://localhost:3000
 
-@authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjYwMDQ1ODQyLCJleHAiOjE2NjA2NTA2NDJ9.IO2NckAoiRqBqy0XkIO8TprHnqXJQ51zd3-S3SNNbQ8
+@authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywia2luZCI6InN0YWZmIiwiaWF0IjoxNjYxMDA0MjkwLCJleHAiOjE2NjE2MDkwOTB9.RgRTiHEpCQ3KffIxDA5Xls0rfK3NcySWWrKq0mzsDWY
 
 ###
 # Find All foods
@@ -17,12 +17,12 @@ GET {{ baseURL }}/foods/1
 
 ###
 # Create food
-POST {{ baseURL }}/foods
+POST {{ baseURL }}/food
 Content-Type: application/json
 Authorization: {{ authorization }}
 
 {
-  "name": "鸡汤",
+  "name": "鸡汤5",
 	"imgUrl": "http://localhost:8080/food/xx.png",
   "desc": "汤类",
   "detail": "老少皆宜，可口美味" 

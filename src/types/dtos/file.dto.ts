@@ -1,5 +1,5 @@
 import { Media } from '@/types/enums/file.enum'
-import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator'
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString, IsUrl } from 'class-validator'
 
 export class FileDto {
   @IsString()
@@ -8,7 +8,8 @@ export class FileDto {
   @IsString()
   public originName: string;
 
-  @IsIn(['IMAGE', 'VEDIO', 'AUDIO', 'TEXT'])
+  @Reflect.metadata('design:type', { name: 'string' })
+  @IsEnum(Media)
   public fileType: Media;
 
   @IsString()
@@ -32,9 +33,22 @@ export class FileOptionalInfoDto {
   @IsOptional()
   public originName?: string;
 
-  @IsIn(['IMAGE', 'VEDIO', 'AUDIO', 'TEXT'])
+  @Reflect.metadata('design:type', { name: 'string' })
+  @IsEnum(Media)
   @IsOptional()
   fileType?: Media
+
+  @IsNumberString()
+  @IsOptional()
+  page?: String;
+
+  @IsNumberString()
+  @IsOptional()
+  size?: String;
+
+  @IsString()
+  @IsOptional()
+  orderby: String;
 }
 
 export class FileRemoteAddressDto {

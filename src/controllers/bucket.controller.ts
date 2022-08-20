@@ -4,8 +4,8 @@ import { Bucket } from '@/types/interfaces/bucket.interface'
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { validationMiddleware } from '@/middlewares/validation.middleware'
+import { ResultWithCount } from '@/types/interfaces/common.interface'
 
-// TODO: 添加对minio的操作
 @Controller()
 export class BucketsController {
   public bucketService: BucketService = new BucketService()
@@ -13,8 +13,8 @@ export class BucketsController {
   @Get('/buckets')
   @OpenAPI({ summary: 'Return a list of buckets' })
   async getBuckets () {
-    const buckets: Bucket[] = await this.bucketService.findAllBuckets()
-    return { data: buckets, message: 'findAll' }
+    const data: ResultWithCount = await this.bucketService.getAll()
+    return { data, message: 'findAll' }
   }
 
   @Get('/bucket/default')

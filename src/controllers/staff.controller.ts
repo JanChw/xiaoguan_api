@@ -32,7 +32,6 @@ export class StaffController {
   @Get('/staff/:id')
   @OpenAPI({ summary: 'return a staff' })
   async getStaffWithRoles (@Param('id') id: number) {
-    // const data: Staff = await this.staffService.getOneWithRelations(id)
     const data: Staff = await this.staffService.getOneById(id, {
       include: {
         roles: {

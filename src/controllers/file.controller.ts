@@ -6,6 +6,7 @@ import { OpenAPI } from 'routing-controllers-openapi'
 import MinioStroage from '@/utils/storage'
 import { isEmpty } from '@/utils/util'
 import { validationMiddleware } from '@/middlewares/validation.middleware'
+import { ResultWithCount } from '@/types/interfaces/common.interface'
 
 @Controller()
 export class FileController {
@@ -14,8 +15,8 @@ export class FileController {
   @Get('/files/:bucketName')
   @OpenAPI({ summary: 'Return a list of files' })
   async findFilesWithBucket (@Param('bucketName') bucketname: string, @QueryParams() query: FileOptionalInfoDto) {
-    const files: File[] = await this.fileService.findFiles({ bucketname, ...query })
-    return { data: files, message: 'find files' }
+    const data: ResultWithCount = await this.fileService.findFiles({ bucketname, ...query })
+    return { data, message: 'find files' }
   }
 
   @Put('/file/:id')
@@ -34,7 +35,6 @@ export class FileController {
     return { data: result, message: 'upload files' }
   }
 
-  // TODO:upload from url
   @Post('/file/upload/:bucketname/remote')
   @UseBefore(validationMiddleware(FileRemoteAddressDto, 'body'))
   @OpenAPI({ summary: 'Upload a file from url' })

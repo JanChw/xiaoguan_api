@@ -10,13 +10,14 @@ import path from 'path'
 import { Media } from '@/types/enums/file.enum'
 import { BucketService } from './bucket.service'
 import { request } from 'undici'
+import { handlePaginationAndOrderArgs } from '@/decorators/crud.decorator'
 
 export class FileService {
   public bucketService: BucketService = new BucketService()
 
   async findFiles (opts?: SearchFileOption): Promise<File[]> {
-    const { bucketname, originName, isCollected, fileType } = opts || {}
-
+    const { page, size, orderby, ..._opts } = opts || {}
+    const { bucketname, originName, isCollected, fileType } = _opts
     const condition = { where: {} }
 
     if (bucketname.length) {
@@ -37,9 +38,13 @@ export class FileService {
       Object.assign(condition.where, { fileType })
     }
 
+    const count = await db.file.count(condition)
+
+    handlePaginationAndOrderArgs({ page, size, orderby }, condition)
+
     const files: File[] = await db.file.findMany(condition)
 
-    return files
+    return { entries: files, count }
   }
 
   async updateFile (id: number, fileData: FileOptionalInfoDto) {

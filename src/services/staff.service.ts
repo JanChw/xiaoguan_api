@@ -19,7 +19,7 @@ export class StaffService {
     if (isEmpty(staffData)) throw new HttpError(400, '参数不能为空')
 
     const findStaff: Staff = await db.staff.findFirst({ where: { phone: staffData.phone } })
-    console.log(findStaff)
+
     if (findStaff) throw new HttpError(409, '此电话号已注册')
 
     const hashedPassword = await hash(staffData.password, 10)
@@ -49,5 +49,29 @@ export class StaffService {
       include: { roles: true },
       data
     })
+  }
+
+  async getOneWithRelations (staffId: number) {
+    const staff = await db.staff.findUnique({
+      where: { id: staffId },
+      select: {
+        id: true,
+        roles: {
+          select: {
+            id: true,
+            name: true,
+            resources: {
+              select: {
+                permission: true
+              }
+            }
+          }
+        }
+
+      }
+    })
+
+    staff.permissions = Array.from(new Set(staff.roles.map(role => role.resources).flat().map(resource => resource.permission)))
+    return staff
   }
 }

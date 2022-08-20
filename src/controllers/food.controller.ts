@@ -1,10 +1,11 @@
 import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParam, BodyParam, QueryParams, Authorized } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
-import { BatchUpdateFoodsDto, FoodDto } from '@/types/dtos/food.dto'
+import { BatchUpdateFoodsDto, FoodDto, FoodQueryDto } from '@/types/dtos/food.dto'
 import { Food } from '@/types/interfaces/food.interface'
 import FoodService from '@/services/food.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
 import { AddPermssion } from '@/decorators/permission.decorator'
+import { ResultWithCount } from '@/types/interfaces/common.interface'
 
 @Controller()
 export class FoodController {
@@ -12,30 +13,34 @@ export class FoodController {
 
   @Get('/foods')
   @OpenAPI({ summary: 'Return a list of foods' })
-  @AddPermssion('食品列表', 'food:finds')
-  async getFoods (@QueryParam('type') type: string) {
-    // const findAllFoods: Food[] = await this.foodService.findAllFoods()
-    const foods: Food[] = await this.foodService.getAll({
-      where: {
-        isDeleted: type === 'recycle'
-      },
+  // @AddPermssion('食品列表', 'food:finds')
+  async getFoods (@QueryParams() queryData: FoodQueryDto) {
+    const { isDeleted, ...paginationAndOrderBy } = queryData
+    const data: ResultWithCount = await this.foodService.getAllWithPagination(paginationAndOrderBy)({
+      where: { isDeleted },
       include: { specs: true }
     })
-    return { data: foods, message: 'findAll' }
+    // const foods: Food[] = await this.foodService.getAll({
+    //   where: {
+    //     isDeleted: type === 'recycle'
+    //   },
+    //   include: { specs: true }
+    // })
+    return { data, message: 'findAll' }
   }
 
   @Get('/foods/search')
   @OpenAPI({ summary: 'fulltext' })
   async searchFullText (@QueryParam('content') content: string) {
-    const data: Food[] = content
-      ? await this.foodService.search(content)
-      : await this.foodService.getAll({
-        where: {
-          isDeleted: false
-        },
-        include: { specs: true }
-      })
+    if (content) {
+      const data = await this.foodService.search(content)
+      return { data, message: 'search' }
+    }
 
+    const data = await this.foodService.getAll({
+      where: { isDeleted: false },
+      include: { specs: true }
+    })
     return { data, message: 'search' }
   }
 

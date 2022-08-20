@@ -1,6 +1,7 @@
 import { Media } from '@/types/enums/file.enum'
 
 export interface File {
+  id: number;
   filename: string;
   originName: string;
   fileType: Media
@@ -11,7 +12,10 @@ export interface SearchFileOption {
   bucketname?: string;
   originName?: string;
   isCollected?: boolean;
-  fileType?: Media
+  fileType?: Media,
+  page?: number | string,
+  size?: number | string,
+  orderby?: string
 }
 
 export interface FileQueryOption {

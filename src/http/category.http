@@ -1,0 +1,57 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+@authorization = bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjYwNjM1MDYyLCJleHAiOjE2NjEyMzk4NjJ9.dvt-07GdyeUwfHD8E39LLnTAaUONpHV0AQiN1gsRYHg
+
+###
+# Find All roles
+GET {{ baseURL }}/categories?include=true
+
+###
+# Find User By Id
+GET {{ baseURL }}/category/1/foods
+Authorization: {{ authorization }}
+
+###
+# Find User By Id
+GET {{ baseURL }}/category/1/foods
+
+###
+# Create Category
+POST {{ baseURL }}/category
+Content-Type: application/json
+
+{
+ "name": "蒸菜"
+}
+
+###
+# Modify User By Id
+PUT {{ baseURL }}/category/1/add/foods
+Content-Type: application/json
+
+{
+	"ids": [1]
+}
+
+###
+# Modify User By Id
+PUT {{ baseURL }}/category/1/remove/foods
+Content-Type: application/json
+
+{
+	"ids": [1]
+}
+
+###
+# Delete User By Id
+DELETE {{ baseURL }}/category/1
+
+###
+# Delete categories By Ids
+DELETE {{ baseURL }}/category/1
+Content-Type: application/json
+
+{
+  "ids": []
+}

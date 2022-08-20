@@ -1,14 +1,39 @@
-import { Crud } from '@/types/interfaces/crud.interface'
+import { CreateRelationOptions, Crud, UpdateRelationOptions } from '@/types/interfaces/crud.interface'
 import db from '@/db'
 import { isEmpty } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
+import { PaginationAndOrderBy } from '@/types/interfaces/common.interface'
 // TODO:错误处理
 export default function CRUD (model: string) {
   return function (target: any) {
     const Model = db[model]
     const crud: Crud = {
       getAll: async (opts = {}) => {
-        return await Model.findMany(opts)
+        const { skip, take, include, ..._opts } = opts
+        const entities = await Model.findMany(opts)
+        const count = await Model.count(_opts)
+        return { entities, count }
+      },
+      getAllWithPagination: (queryData: PaginationAndOrderBy) => async (opts = {}) => {
+        const { include, ..._opts } = opts
+
+        handlePaginationAndOrderArgs(queryData, opts)
+        // let { page, size, orderby } = queryData
+        // size = Number(size) || 15
+        // page = Number(page) || 1
+        // const skip = (page - 1) * size
+        // const take = size
+        // Object.assign(opts, { skip, take })
+        // if (orderby) {
+        //   if (!orderby.includes(':')) throw new HttpError(400, 'orderby参数格式错误')
+        //   const orderBy = {}
+        //   const [key, value] = orderby.split(':')
+        //   orderBy[key] = value
+        //   Object.assign(opts, { orderBy })
+        // }
+        const entities = await Model.findMany(opts)
+        const count = await Model.count(_opts)
+        return { entities, count }
       },
 
       getOneById: async (id: number, opts = {}) => {
@@ -24,24 +49,39 @@ export default function CRUD (model: string) {
         if (isEmpty(entity)) throw new HttpError(400, '参数不能为空')
         return await Model.create(Object.assign(opts, { data: entity }))
       },
-      createWithRelations: async (entity: any, relation: string, relations: number[], opts = {}) => {
+      createWithRelations: async (relationOpts: CreateRelationOptions, opts = {}) => {
+        const { relation, relations, entity } = relationOpts
         if (isEmpty(entity) || isEmpty(relations) || isEmpty(relation)) throw new HttpError(400, '参数不能为空')
         const relationObj = {}
         relationObj[relation] = { connect: relations.map(id => ({ id })) }
         return await Model.create(Object.assign(opts, { data: entity, ...relationObj }))
       },
 
-      createWithUnique: async (entity: any, unique?: string) => {
+      createUniqueWithRelations: async (unique: string, relationOpts: CreateRelationOptions, opts = {}) => {
+        const { relation, relations, entity } = relationOpts
+        console.log(relationOpts)
+        if (isEmpty(entity) || isEmpty(relations) || isEmpty(relation) || isEmpty(unique)) throw new HttpError(400, '参数不能为空')
+
+        const whereCondition = { where: {} }
+        // eslint-disable-next-line dot-notation
+        whereCondition['where'][unique] = entity[unique]
+        const model = await Model.findUnique(whereCondition)
+        if (model) throw new HttpError(400, `${entity[unique]}已经存在`)
+
+        const relationObj = {}
+        relationObj[relation] = { connect: relations.map(id => ({ id })) }
+        return await Model.create(Object.assign(opts, { data: { ...entity, ...relationObj } }))
+      },
+
+      createWithUnique: async (unique: string, entity: any, opts = {}) => {
         if (isEmpty(entity)) throw new HttpError(400, '参数不能为空')
 
-        if (unique) {
-          const whereCondition = { where: {} }
-          // eslint-disable-next-line dot-notation
-          whereCondition['where'][unique] = entity[unique]
-          const model = await Model.findUnique(whereCondition)
-          if (model) throw new HttpError(400, `${entity[unique]}已经存在`)
-        }
-        return await Model.create({ data: entity })
+        const whereCondition = { where: {} }
+        // eslint-disable-next-line dot-notation
+        whereCondition['where'][unique] = entity[unique]
+        const model = await Model.findUnique(whereCondition)
+        if (model) throw new HttpError(400, `${entity[unique]}已经存在`)
+        return await Model.create({ data: entity }, opts)
       },
       // TODO:如果有关联数据会报错
       delete: async (id: number) => {
@@ -65,12 +105,13 @@ export default function CRUD (model: string) {
 
         return await Model.update(Object.assign(opts, { where: { id }, data: entity }))
       },
-      updateRelations: (relation, relationIds, op: 'add'| 'remove') => async (id: number, opts = {}) => {
+      updateRelations: (updateRelationOpts: UpdateRelationOptions) => async (id: number, opts = {}) => {
+        const { op, relation, relations } = updateRelationOpts
         const self = crud
         const entity = {}
 
-        op === 'add' && (entity[relation] = { connect: relationIds.map(id => ({ id })) })
-        op === 'remove' && (entity[relation] = { disconnect: relationIds.map(id => ({ id })) })
+        op === 'add' && (entity[relation] = { connect: relations.map(id => ({ id })) })
+        op === 'remove' && (entity[relation] = { disconnect: relations.map(id => ({ id })) })
 
         return await self.update(id, entity, opts)
       },
@@ -82,5 +123,21 @@ export default function CRUD (model: string) {
     }
 
     Object.assign(target.prototype, crud)
+  }
+}
+
+export function handlePaginationAndOrderArgs (args: PaginationAndOrderBy, opts: Object) {
+  let { page, size, orderby } = args
+  size = Number(size) || 15
+  page = Number(page) || 1
+  const skip = (page - 1) * size
+  const take = size
+  Object.assign(opts, { skip, take })
+  if (orderby) {
+    if (!orderby.includes(':')) throw new HttpError(400, 'orderby参数格式错误')
+    const orderBy = {}
+    const [key, value] = orderby.split(':')
+    orderBy[key] = value
+    Object.assign(opts, { orderBy })
   }
 }

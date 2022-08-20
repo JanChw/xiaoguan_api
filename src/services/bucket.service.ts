@@ -8,12 +8,6 @@ import CRUD from '@/decorators/crud.decorator'
 
 @CRUD('bucket')
 export class BucketService {
-  public async findAllBuckets (): Promise<Bucket[]> {
-    const buckets: Bucket[] = await db.bucket.findMany()
-    return buckets
-  }
-
-  // TODO:在minio中添加桶
   public async findBucketByName (bucketName: string): Promise<Bucket> {
     const bucket: Bucket = await db.bucket.findFirst({
       where: { name: bucketName }

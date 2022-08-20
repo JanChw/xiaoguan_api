@@ -1,9 +1,11 @@
-import { Body, BodyParam, Controller, CurrentUser, Delete, Get, Param, Post, QueryParam } from 'routing-controllers'
+import { BodyParam, Controller, CurrentUser, Delete, Get, Param, Post, QueryParam, QueryParams, UseBefore } from 'routing-controllers'
 import randomStr from 'randomstring'
 import { OrderService } from '@/services/order.service'
 import { Order } from '@/types/interfaces/order.interface'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { User } from '@/types/interfaces/user.interface'
+import { validationMiddleware } from '@/middlewares/validation.middleware'
+import { OrderQueryDto } from '@/types/dtos/order.dto'
 
 @Controller()
 export class OrdersController {
@@ -20,16 +22,18 @@ export class OrdersController {
   @OpenAPI({ summary: 'create a order' })
   async createOrder (@CurrentUser() user: User, @BodyParam('code') code: string) {
     const order: Order = await this.orderService.createOrder(user.id, code)
+    // 过期未支付自动删除订单
+    setTimeout(() => {
+      this.orderService.delete(order.id)
+    }, 30 * 60 * 1000)
     return { data: order, message: 'create order' }
   }
 
   @Get('/orders/search')
-  @OpenAPI({ summary: 'fulltext' })
-  async searchFullText (@QueryParam('content') content: string) {
-    const data: Order[] = content
-      ? await this.orderService.search(content)
-      : await this.orderService.getAll({ include: { specs: true } })
-
+  @OpenAPI({ summary: 'search' })
+  @UseBefore(validationMiddleware(OrderQueryDto, 'query', true))
+  async searchFullText (@QueryParams() query: OrderQueryDto) {
+    const data = await this.orderService.search(query)
     return { data, message: 'search' }
   }
 
@@ -42,7 +46,7 @@ export class OrdersController {
 
   @Delete('/orders')
   @OpenAPI({ summary: 'delete a list of orders' })
-  async removeOrders (@Body() ids: number[]): Promise<Order[]> {
+  async removeOrders (@BodyParam('ids') ids: number[]): Promise<Order[]> {
     const orders: Order[] = await this.orderService.deletes(ids)
     return orders
   }

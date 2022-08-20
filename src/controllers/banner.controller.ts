@@ -1,8 +1,10 @@
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { BannerService } from '@/services/banner.service'
 import { BannerDto } from '@/types/dtos/banner.dto'
+import { PaginationAndOrderByDto } from '@/types/dtos/common.dto'
 import { Banner } from '@/types/interfaces/banner.interface'
-import { Body, BodyParam, Controller, Delete, Get, HttpCode, Param, Post, Put, UseBefore } from 'routing-controllers'
+import { ResultWithCount } from '@/types/interfaces/common.interface'
+import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParams, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
 @Controller()
@@ -11,11 +13,11 @@ export class BannersController {
 
   @Get('/banners')
   @OpenAPI({ summary: 'Return a list of banners' })
-  async getAllBanners () {
-    const banners: Banner[] = await this.bannerService.getAll({
+  async getAllBanners (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const data: ResultWithCount = await this.bannerService.getAllWithPagination(queryData)({
       include: { imgs: true }
     })
-    return banners
+    return { data, message: 'list banner' }
   }
 
   @Get('/banner/:id')
@@ -38,18 +40,27 @@ export class BannersController {
     return { data, message: 'get a banner' }
   }
 
+  // TODO:Test
   @Post('/banner')
   @UseBefore(validationMiddleware(BannerDto, 'body'))
   @OpenAPI({ summary: 'Create a banner' })
   async CreateBanner (@Body() bannerData: BannerDto) {
-    const { imgs } = bannerData
+    const { imgs, ..._bannerData } = bannerData
+    const includeImgs = { include: { imgs: true } }
+
     if (imgs) {
-      bannerData.imgs = { connect: imgs.map(id => { return { id } }) }
+      const createRelationOpts = {
+        entity: _bannerData,
+        relation: 'imgs',
+        relations: imgs
+      }
+      const data = await this.bannerService.createUniqueWithRelations('name', createRelationOpts, includeImgs)
+      return { data, message: 'createOne' }
     }
 
-    const result = await this.bannerService.create(bannerData, { include: { imgs: true } })
+    const data = await this.bannerService.createWithUnique('name', bannerData, includeImgs)
 
-    return { data: result, message: 'createOne' }
+    return { data, message: 'createOne' }
   }
 
   @Put('/banner/:id')
@@ -60,22 +71,32 @@ export class BannersController {
     return { data: banner, message: 'UpdateOne' }
   }
 
-  @Put('/banner/:id/add/img')
+  @Put('/banner/:id/add/imgs')
   @OpenAPI({ summary: 'add or remove img from banner' })
   async addImagesToBanner (@Param('id') id: number, @BodyParam('imgs') imgIds: number[]) {
-    const data = { imgs: { connect: imgIds.map(id => { return { id } }) } }
+    const includeImgs = { include: { imgs: true } }
+    const updateRelation = {
+      op: 'add',
+      relation: 'imgs',
+      relations: imgIds
 
-    const banner: Banner = await this.bannerService.update(id, data, { include: { imgs: true } })
-    return { data: banner, message: 'add or remove img from banner' }
+    }
+    const data: Banner = await this.bannerService.updateRelations(updateRelation)(id, includeImgs)
+    return { data, message: 'add or remove img from banner' }
   }
 
-  @Put('/banner/:id/remove/img')
+  @Put('/banner/:id/remove/imgs')
   @OpenAPI({ summary: 'add or remove img from banner' })
   async removeImagesToBanner (@Param('id') id: number, @BodyParam('imgs') imgIds: number[]) {
-    const data = { imgs: { disconnect: imgIds.map(id => { return { id } }) } }
+    const includeImgs = { include: { imgs: true } }
+    const updateRelation = {
+      op: 'remove',
+      relation: 'imgs',
+      relations: imgIds
 
-    const banner: Banner = await this.bannerService.update(id, data, { include: { imgs: true } })
-    return { data: banner, message: 'add or remove img from banner' }
+    }
+    const data: Banner = await this.bannerService.updateRelations(updateRelation)(id, includeImgs)
+    return { data, message: 'add or remove img from banner' }
   }
 
   @Delete('/banner/:id')

@@ -10,13 +10,3 @@ export class CreateSpecDto {
   @IsNumber()
   public price: number;
 }
-
-// export class UpdateSpecPartialDto {
-//   @IsString()
-//   @IsOptional()
-//   public name: string;
-
-//   @IsNumber()
-//   @IsOptional()
-//   public price: number;
-// }

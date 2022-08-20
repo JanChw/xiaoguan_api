@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsDate, IsIn, IsNumber, IsObject, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsDate, IsEnum, IsIn, IsNumber, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator'
 import { SaleType } from '../enums/food.enum'
 import { Spec } from '../interfaces/spec.interface'
 
@@ -36,7 +36,8 @@ export class FoodDto {
   @IsOptional()
   public isPublished: boolean;
 
-  @IsIn(['OFFLINE', 'ONLINE', 'BOTH'])
+  @Reflect.metadata('design:type', { name: 'string' })
+  @IsEnum(SaleType)
   @IsOptional()
   public saleType: SaleType;
 
@@ -55,4 +56,22 @@ export class BatchUpdateFoodsDto {
 
   @IsObject()
   payload: Partial<FoodDto>
+}
+
+export class FoodQueryDto {
+  @IsBoolean()
+  @IsOptional()
+  public isDeleted: boolean;
+
+  @IsNumberString()
+  @IsOptional()
+  page?: String;
+
+  @IsNumberString()
+  @IsOptional()
+  size?: String;
+
+  @IsString()
+  @IsOptional()
+  orderby: String;
 }
