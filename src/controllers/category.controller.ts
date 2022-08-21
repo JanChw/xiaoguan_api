@@ -14,15 +14,29 @@ export class CategoryController {
   @Get('/categories')
   @OpenAPI({ summary: 'get a list of category' })
   async getCategories (@QueryParams() queryData: PaginationAndOrderByDto) {
-    const data: ResultWithCount = await this.categoryService.getAllWithPagination(queryData)({ include: { foods: true } })
+    const data: ResultWithCount = await this.categoryService.getAllWithPagination(queryData)()
+    return { data, message: 'get a list of category' }
+  }
+
+  @Get('/categories/foods')
+  @OpenAPI({ summary: 'get a list of category' })
+  async getFoodsByCategory (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const data = await this.categoryService.getFoodsByCategory(queryData)
     return { data, message: 'get a list of category' }
   }
 
   // TODO:关联数据分页
+  // @Get('/category/:id/foods')
+  // @OpenAPI({ summary: 'get a category by id' })
+  // async getOne (@Param('id') id: number) {
+  //   const data: Category = await this.categoryService.getOneById(id, { include: { foods: true } })
+  //   return { data, message: 'get a category by id' }
+  // }
+
   @Get('/category/:id/foods')
   @OpenAPI({ summary: 'get a category by id' })
-  async getOne (@Param('id') id: number) {
-    const data: Category = await this.categoryService.getOneById(id, { include: { foods: true } })
+  async getOne (@Param('id') id: number, @QueryParams() queryData: PaginationAndOrderByDto) {
+    const data = await this.categoryService.getFoodsOfCategory(id, queryData)
     return { data, message: 'get a category by id' }
   }
 
@@ -45,15 +59,23 @@ export class CategoryController {
   @Put('/category/:id/add/foods')
   @OpenAPI({ summary: 'add foods to category' })
   async addFoodsToCategory (@Param('id') id: number, @BodyParam('ids') foodIds: number[]) {
-    const data = await this.categoryService.updateRelations('foods', foodIds, 'add')(id)
+    const data = await this.categoryService.updateRelations({
+      op: 'add',
+      relation: 'foods',
+      relations: foodIds
+    })(id)
     return { data, message: 'add foods to category' }
   }
 
   @Put('/category/:id/remove/foods')
   @OpenAPI({ summary: 'add foods to category' })
   async removeFoodsToCategory (@Param('id') id: number, @BodyParam('ids') foodIds: number[]) {
-    const data = await this.categoryService.updateRelations('foods', foodIds, 'remove')(id)
-    return { data, message: 'add foods to category' }
+    const data = await this.categoryService.updateRelations({
+      op: 'remove',
+      relation: 'foods',
+      relations: foodIds
+    })(id)
+    return { data, message: 'remove foods to category' }
   }
 
   @Delete('/cotegory/:id')

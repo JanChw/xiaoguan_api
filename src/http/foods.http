@@ -1,7 +1,7 @@
 # baseURL
 @baseURL = http://localhost:3000
 
-@authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywia2luZCI6InN0YWZmIiwiaWF0IjoxNjYxMDA0MjkwLCJleHAiOjE2NjE2MDkwOTB9.RgRTiHEpCQ3KffIxDA5Xls0rfK3NcySWWrKq0mzsDWY
+@authorization = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InN0YWZmIiwiaWF0IjoxNjYxMDU5OTI5LCJleHAiOjE2NjE2NjQ3Mjl9.PoKoXRl6tF5Y1REFyrdvV1Wo3NXJfn1gYUhxbNPqyLA
 
 ###
 # Find All foods
@@ -22,9 +22,9 @@ Content-Type: application/json
 Authorization: {{ authorization }}
 
 {
-  "name": "鸡汤5",
+  "name": "鸡汤21",
 	"imgUrl": "http://localhost:8080/food/xx.png",
-  "desc": "汤类",
+  "description": "汤类",
   "detail": "老少皆宜，可口美味" 
 }
 

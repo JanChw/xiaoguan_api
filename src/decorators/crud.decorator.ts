@@ -18,19 +18,6 @@ export default function CRUD (model: string) {
         const { include, ..._opts } = opts
 
         handlePaginationAndOrderArgs(queryData, opts)
-        // let { page, size, orderby } = queryData
-        // size = Number(size) || 15
-        // page = Number(page) || 1
-        // const skip = (page - 1) * size
-        // const take = size
-        // Object.assign(opts, { skip, take })
-        // if (orderby) {
-        //   if (!orderby.includes(':')) throw new HttpError(400, 'orderby参数格式错误')
-        //   const orderBy = {}
-        //   const [key, value] = orderby.split(':')
-        //   orderBy[key] = value
-        //   Object.assign(opts, { orderBy })
-        // }
         const entities = await Model.findMany(opts)
         const count = await Model.count(_opts)
         return { entities, count }
@@ -99,6 +86,8 @@ export default function CRUD (model: string) {
       },
 
       update: async (id: number, entity: any, opts = {}) => {
+        console.log(id)
+        console.log(entity)
         if (isEmpty(id) || isEmpty(entity)) throw new HttpError(400, '参数不能为空')
         const _entity = await Model.findFirst({ where: { id } })
         if (!_entity) { throw new Error(`要更新的${model}不存在`) }
@@ -109,6 +98,7 @@ export default function CRUD (model: string) {
         const { op, relation, relations } = updateRelationOpts
         const self = crud
         const entity = {}
+        console.log(updateRelationOpts)
 
         op === 'add' && (entity[relation] = { connect: relations.map(id => ({ id })) })
         op === 'remove' && (entity[relation] = { disconnect: relations.map(id => ({ id })) })

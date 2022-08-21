@@ -127,7 +127,7 @@ model cartItem {
 model food {
   id          Int       @id @unique @default(autoincrement())
   imgUrl      String
-  desc        String    @default("")
+  description        String    @default("")
   detail      String    @default("")
   saleType    SaleType? @default(OFFLINE)
   isPublished Boolean?  @default(false)
@@ -166,6 +166,7 @@ model category {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  @@map("categories")
 }
 
 model bucket {

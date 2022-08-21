@@ -34,7 +34,7 @@ export default class FoodService {
         name: {
           search: content
         },
-        desc: {
+        description: {
           search: content
         },
         detail: {

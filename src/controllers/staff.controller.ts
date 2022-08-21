@@ -63,6 +63,7 @@ export class StaffController {
     return { data, message: 'create a staff' }
   }
 
+  // TODO:
   @Put('/staff/:id/roles')
   @OpenAPI({ summary: 'add or remove roles for staff with type query parameter' })
   async addRolesToStaff (@BodyParam('ids') roleIds: number[], @Param('id') staffId: number, @QueryParam('type') op: 'add' | 'remove') {

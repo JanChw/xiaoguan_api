@@ -3,7 +3,7 @@
 
 ###
 # Find All files
-GET {{ baseURL }}/files/test
+GET {{ baseURL }}/files/test?isCollected=1
 
 ###
 # Find file By Id

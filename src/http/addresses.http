@@ -3,7 +3,11 @@
 
 ###
 # Find All addresss
-GET {{ baseURL }}/addresses
+GET {{ baseURL }}/addresses?page=2&orderby=id:asc
+
+###
+# Find All addresss
+GET {{ baseURL }}/addresses/search?address=
 
 ###
 # Find address By Id
@@ -11,12 +15,12 @@ GET {{ baseURL }}/addresses/1
 
 ###
 # Create address
-POST {{ baseURL }}/addresses
+POST {{ baseURL }}/address
 Content-Type: application/json
 
 {
  "address":"香聪小区7-12",
- "isDefault": true,
+ "isDefault": false,
  "userId": 2
 }
 

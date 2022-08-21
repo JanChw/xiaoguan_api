@@ -4,7 +4,7 @@ export function AddPermssion (title, permission) {
   return function (target, key, descriptor) {
     if (!once) {
       const service = new ResourceService()
-      service.createWithUnique({ title, permission }, 'permission').then(() => {
+      service.createWithUnique('permission', { title, permission }).then(() => {
         once = true
       }).catch(err => { console.log(err.message) })
     }

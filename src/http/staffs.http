@@ -1,6 +1,6 @@
 # baseURL
 @baseURL = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNjYwMDM2ODI4LCJleHAiOjE2NjAwNDA0Mjh9.g4kWnmKPeLyNU6nlztKGtFdDd8cty8YqxwQcQt6CFUw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwia2luZCI6InN0YWZmIiwiaWF0IjoxNjYxMDU5OTI5LCJleHAiOjE2NjE2NjQ3Mjl9.PoKoXRl6tF5Y1REFyrdvV1Wo3NXJfn1gYUhxbNPqyLA
 
 ###
 # Find All staffs
@@ -8,15 +8,15 @@ GET {{ baseURL }}/staffs
 
 ###
 # Find User By Id
-GET {{ baseURL }}/staffs/3
+GET {{ baseURL }}/staff/1
 
 ###
 # Create User
-POST {{ baseURL }}/staffs/create
+POST {{ baseURL }}/staff/create
 Content-Type: application/json
 
 {
-  "phone": "+8615172435971",
+  "phone": "+8615172435973",
 	"name": "周先生",
 	"password": "123456"
 }
@@ -26,18 +26,18 @@ POST {{ baseURL }}/staff/login
 Content-Type: application/json
 
 {
-  "phone": "+8615172435971",
+  "phone": "+8615172435973",
 	"password": "123456"
 }
 
 
 ###
 # add or remove roles from staff
-PUT {{ baseURL }}/staffs/3/roles?type=add
+PUT {{ baseURL }}/staff/1/roles?type=add
 Content-Type: application/json
 
 {
-	"ids": [2, 3]
+	"ids": [1, 2]
 }
 
 ###

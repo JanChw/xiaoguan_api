@@ -14,7 +14,7 @@ export class FoodDto {
   public imgUrl: string;
 
   @IsString()
-  public desc: string;
+  public description: string;
 
   @IsString()
   public detail: string;

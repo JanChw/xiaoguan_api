@@ -18,12 +18,12 @@ GET {{ baseURL }}/roles/1/resources
 
 ###
 # Create User
-POST {{ baseURL }}/roles
+POST {{ baseURL }}/role
 Content-Type: application/json
 
 {
- "name": "guest",
- "title": "客户"
+ "name": "superadmin",
+ "title": "超级管理员"
 }
 
 ###
@@ -32,7 +32,7 @@ PUT {{ baseURL }}/role/1/add/permissions
 Content-Type: application/json
 
 {
-	"ids": [135]
+	"ids": [3]
 }
 
 ###
