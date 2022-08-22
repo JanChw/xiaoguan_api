@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString, Length, MaxLength, ValidateIf } from 'class-validator'
+import { IsEnum, IsNumberString, IsOptional, IsString, Length, MaxLength, ValidateIf } from 'class-validator'
 import { PaymentStatus } from '../enums/order.enum'
 
 export class OrderDto {
@@ -17,4 +17,17 @@ export class OrderQueryDto {
   @IsEnum(PaymentStatus)
   @IsOptional()
   status: PaymentStatus
+
+  @IsNumberString()
+  @IsOptional()
+  page: string;
+
+  @IsNumberString()
+  @IsOptional()
+  size: string;
+
+  @IsString()
+  @ValidateIf(o => o.orderby && o.orderby.includes(':'))
+  @IsOptional()
+  orderby: string;
 }

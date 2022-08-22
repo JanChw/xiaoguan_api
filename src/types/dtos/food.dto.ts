@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsDate, IsEnum, IsIn, IsNumber, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsDate, IsEnum, IsIn, IsNotEmpty, IsNumber, IsNumberString, IsObject, IsOptional, IsString } from 'class-validator'
 import { SaleType } from '../enums/food.enum'
 import { Spec } from '../interfaces/spec.interface'
 
@@ -8,19 +8,19 @@ export class FoodDto {
   id: number;
 
   @IsString()
-  public name: string;
+  name: string;
 
   @IsString()
-  public imgUrl: string;
+  imgUrl: string;
 
   @IsString()
-  public description: string;
+  description: string;
 
   @IsString()
-  public detail: string;
+  detail: string;
 
   @IsOptional()
-  public specs: Spec[];
+  specs: Spec[];
 
   // @ValidateIf(n => n && !Number.isNaN(Number(n)))
   @IsNumber()
@@ -30,24 +30,24 @@ export class FoodDto {
   // @ValidateIf(n => n && !Number.isNaN(Number(n)))
   @IsNumber()
   @IsOptional()
-  public originPrice: number;
+  originPrice: number;
 
   @IsBoolean()
   @IsOptional()
-  public isPublished: boolean;
+  isPublished: boolean;
 
   @Reflect.metadata('design:type', { name: 'string' })
   @IsEnum(SaleType)
   @IsOptional()
-  public saleType: SaleType;
+  saleType: SaleType;
 
   @IsBoolean()
   @IsOptional()
-  public isDeleted: boolean;
+  isDeleted: boolean;
 
   @IsDate()
   @IsOptional()
-  public createdAt: Date;
+  createdAt: Date;
 }
 
 export class BatchUpdateFoodsDto {
@@ -61,17 +61,22 @@ export class BatchUpdateFoodsDto {
 export class FoodQueryDto {
   @IsBoolean()
   @IsOptional()
-  public isDeleted: boolean;
+  isDeleted: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  content: string;
 
   @IsNumberString()
   @IsOptional()
-  page?: String;
+  page: string;
 
   @IsNumberString()
   @IsOptional()
-  size?: String;
+  size: string;
 
   @IsString()
   @IsOptional()
-  orderby: String;
+  orderby: string;
 }

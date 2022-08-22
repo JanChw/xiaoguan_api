@@ -4,3 +4,13 @@ export interface User {
   phone: string;
   password: string;
 }
+
+export interface UserQuery {
+  content?: string;
+
+  page?: string;
+
+  size?: string;
+
+  order?: string;
+}

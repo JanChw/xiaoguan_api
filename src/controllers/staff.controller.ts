@@ -1,7 +1,8 @@
 import { StaffService } from '@/services/staff.service'
+import { PaginationAndOrderByDto } from '@/types/dtos/common.dto'
 import { StaffDto } from '@/types/dtos/staff.dto'
 import { Staff } from '@/types/interfaces/staff.interface'
-import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParam } from 'routing-controllers'
+import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParam, QueryParams } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
 @Controller()
@@ -10,22 +11,22 @@ export class StaffController {
 
   @Get('/staffs')
   @OpenAPI({ summary: 'return a list of all staffs' })
-  async getAllStaffs () {
-    const data: Staff[] = await this.staffService.getAll()
+  async getAllStaffs (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const data: Staff[] = await this.staffService.getAllWithPagination(queryData)()
     return { data, message: 'get all staffs' }
   }
 
   @Get('/staffs/company')
   @OpenAPI({ summary: 'return a list of company staffs' })
-  async getStaffs () {
-    const data: Staff[] = await this.getAll({ where: { isCopartner: false } })
+  async getStaffs (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const data: Staff[] = await this.getAllWithPagination(queryData)({ where: { isCopartner: false } })
     return { data, message: 'get company staffs ' }
   }
 
   @Get('/staffs/copartner')
   @OpenAPI({ summary: 'return a list of company staffs' })
-  async getCopartners () {
-    const data: Staff[] = await this.getAll({ where: { isCopartner: true } })
+  async getCopartners (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const data: Staff[] = await this.getAllWithPagination(queryData)({ where: { isCopartner: true } })
     return { data, message: 'get all copartners' }
   }
 

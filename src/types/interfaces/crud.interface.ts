@@ -1,4 +1,5 @@
-import { Pagination } from './common.interface'
+import { PaginationAndOrderByDto } from '../dtos/common.dto'
+import { Pagination, PaginationAndOrderBy } from './common.interface'
 
 export interface DeleteManyOptions {
   propName: string,
@@ -20,9 +21,13 @@ export interface UpdateRelationOptions {
 export interface Crud {
   getAll: (opts: Object) => Promise<any>,
 
-  getAllWithPagination: (pagination: Pagination) => ((opts: Object) => Promise<any>),
+  getAllWithPagination: (pagination: Pagination) => (opts: Object) => Promise<any>,
 
   getOneById: (id: number, opts: Object) => Promise<any>,
+
+  getRelationsBy: (args: PaginationAndOrderBy) => (relation: string, opts: Object) => Promise<any>,
+
+  getRelationsOf: (args: PaginationAndOrderBy) => (id: number, relation: string, opts: Object) => Promise<any>
 
   create: (entity: any) => Promise<any>,
 

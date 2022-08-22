@@ -31,7 +31,7 @@ export class OrdersController {
 
   @Get('/orders/search')
   @OpenAPI({ summary: 'search' })
-  @UseBefore(validationMiddleware(OrderQueryDto, 'query', true))
+  // @UseBefore(validationMiddleware(OrderQueryDto, 'query', true))
   async searchFullText (@QueryParams() query: OrderQueryDto) {
     const data = await this.orderService.search(query)
     return { data, message: 'search' }

@@ -1,9 +1,10 @@
 import { hash } from 'bcrypt'
 import { UserDto } from '@/types/dtos/user.dto'
-import { User } from '@/types/interfaces/user.interface'
+import { User, UserQuery } from '@/types/interfaces/user.interface'
 import { isEmpty } from '@utils/util'
 import db from '@/db'
 import { HttpError } from 'routing-controllers'
+import { handlePaginationAndOrderArgs } from '@/decorators/crud.decorator'
 
 const selectOpts = {
   id: true,
@@ -35,10 +36,10 @@ export class UserService {
     return users
   }
 
-  public async search (content: string): Promise<User> {
+  public async search (queryData: UserQuery): Promise<{entities: any, count: number}> {
+    const { content, ..._queryData } = queryData
     if (isEmpty(content)) throw new HttpError(400, '参数不能为空')
-
-    const data: User[] = await db.user.findMany({
+    const condition = {
       where: {
         name: {
           search: content
@@ -48,9 +49,12 @@ export class UserService {
         }
       },
       select: _selectOpts
-    })
+    }
+    const count = await db.user.count({ where: condition.where })
+    handlePaginationAndOrderArgs(_queryData, condition)
+    const entities = await db.user.findMany(condition)
 
-    return data
+    return { entities, count }
   }
 
   public async updateUser (userId: number, userData: Partial<UserDto>): Promise<User[]> {

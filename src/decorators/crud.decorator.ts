@@ -32,6 +32,44 @@ export default function CRUD (model: string) {
         return repository
       },
 
+      getRelationsOf: (args: PaginationAndOrderBy) => async (id: number, relation: string, opts = {}) => {
+        if (isEmpty(id)) throw new HttpError(400, '参数不能为空')
+        // eslint-disable-next-line dot-notation
+        if (!opts['select']) {
+          // eslint-disable-next-line dot-notation
+          opts['select'] = { _count: { select: {} } }
+        }
+        const { select } = opts
+        // eslint-disable-next-line dot-notation
+        select['_count']['select'][relation] = true
+        // eslint-disable-next-line dot-notation
+        select[relation] = {}
+        handlePaginationAndOrderArgs(args, select[relation])
+        console.log(Object.assign(opts, { where: { id } }))
+        const repository = await Model.findUnique(Object.assign(opts, { where: { id } }))
+        if (!repository) throw new HttpError(404, `${model} 不存在`)
+
+        return { entities: repository[relation], count: repository._count[relation] }
+      },
+
+      getRelationsBy: (args: PaginationAndOrderBy) => async (relation: string, opts = {}) => {
+        // eslint-disable-next-line dot-notation
+        if (!opts['select']) {
+          // eslint-disable-next-line dot-notation
+          opts['select'] = { _count: { select: {} } }
+        }
+        const { select } = opts
+        // eslint-disable-next-line dot-notation
+        select['_count']['select'][relation] = true
+        // eslint-disable-next-line dot-notation
+        select[relation] = {}
+        handlePaginationAndOrderArgs(args, select[relation])
+        console.log(opts)
+        const repository = await Model.findMany(opts)
+        if (!repository) throw new HttpError(404, `${model} 不存在`)
+        return repository
+      },
+
       create: async (entity: any, opts = {}) => {
         if (isEmpty(entity)) throw new HttpError(400, '参数不能为空')
         return await Model.create(Object.assign(opts, { data: entity }))

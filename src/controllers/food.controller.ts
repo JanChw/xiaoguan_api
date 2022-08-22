@@ -1,4 +1,4 @@
-import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParam, BodyParam, QueryParams, Authorized } from 'routing-controllers'
+import { Controller, Param, Body, Get, Post, Put, Delete, UseBefore, QueryParam, BodyParam, QueryParams, Authorized } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { BatchUpdateFoodsDto, FoodDto, FoodQueryDto } from '@/types/dtos/food.dto'
 import { Food } from '@/types/interfaces/food.interface'
@@ -17,29 +17,22 @@ export class FoodController {
   async getFoods (@QueryParams() queryData: FoodQueryDto) {
     const { isDeleted, ...paginationAndOrderBy } = queryData
     const data: ResultWithCount = await this.foodService.getAllWithPagination(paginationAndOrderBy)({
-      where: { isDeleted },
-      include: { specs: true }
+      where: { isDeleted }
     })
-    // const foods: Food[] = await this.foodService.getAll({
-    //   where: {
-    //     isDeleted: type === 'recycle'
-    //   },
-    //   include: { specs: true }
-    // })
     return { data, message: 'findAll' }
   }
 
   @Get('/foods/search')
   @OpenAPI({ summary: 'fulltext' })
-  async searchFullText (@QueryParam('content') content: string) {
+  async searchFullText (@QueryParams() queryData: FoodQueryDto) {
+    const { content, ..._queryData } = queryData
     if (content) {
-      const data = await this.foodService.search(content)
+      const data = await this.foodService.search(content, _queryData)
       return { data, message: 'search' }
     }
 
     const data = await this.foodService.getAll({
-      where: { isDeleted: false },
-      include: { specs: true }
+      where: { isDeleted: false }
     })
     return { data, message: 'search' }
   }

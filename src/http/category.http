@@ -8,8 +8,12 @@
 GET {{ baseURL }}/categories
 
 ###
+# Find All roles
+GET {{ baseURL }}/categories/foods
+
+###
 # Find User By Id
-GET {{ baseURL }}/category/1/foods?orderby=id:asc
+GET {{ baseURL }}/category/1/foods?orderby=id:desc
 Authorization: {{ authorization }}
 
 ###

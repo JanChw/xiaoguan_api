@@ -1,9 +1,10 @@
-import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore } from 'routing-controllers'
+import { Controller, Param, Body, Get, Post, Put, Delete, HttpCode, UseBefore, QueryParams } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { CreateSpecDto } from '@/types/dtos/spec.dto'
 import { Spec } from '@/types/interfaces/spec.interface'
 import SpecService from '@/services/spec.service'
 import { validationMiddleware } from '@middlewares/validation.middleware'
+import { PaginationAndOrderByDto } from '@/types/dtos/common.dto'
 
 @Controller()
 export class SpecsController {
@@ -11,8 +12,8 @@ export class SpecsController {
 
   @Get('/specs')
   @OpenAPI({ summary: 'Return a list of specs' })
-  async getSpecs () {
-    const specs: Spec[] = await this.specService.getAll()
+  async getSpecs (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const specs: Spec[] = await this.specService.getAllWithPagination(queryData)()
     return { data: specs, message: 'findAll' }
   }
 

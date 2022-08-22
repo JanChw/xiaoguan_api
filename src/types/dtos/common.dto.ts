@@ -1,15 +1,16 @@
-import { IsNumberString, IsOptional, IsString } from 'class-validator'
+import { IsNumberString, IsOptional, IsString, ValidateIf } from 'class-validator'
 
 export class PaginationAndOrderByDto {
   @IsNumberString()
   @IsOptional()
-  page?: String;
+  page: String;
 
   @IsNumberString()
   @IsOptional()
-  size?: String;
+  size: String;
 
   @IsString()
+  @ValidateIf(o => o.orderby && o.orderby.includes(':'))
   @IsOptional()
   orderby: String;
 }

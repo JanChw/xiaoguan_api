@@ -3,8 +3,9 @@ import db from '../db'
 import { Food } from '../types/interfaces/food.interface'
 import { FoodDto } from '@/types/dtos/food.dto'
 import { isEmpty } from '@utils/util'
-import CRUD from '@/decorators/crud.decorator'
+import CRUD, { handlePaginationAndOrderArgs } from '@/decorators/crud.decorator'
 import { HttpError } from 'routing-controllers'
+import { PaginationAndOrderBy } from '@/types/interfaces/common.interface'
 
 @CRUD('food')
 export default class FoodService {
@@ -25,10 +26,9 @@ export default class FoodService {
     return _food
   }
 
-  public async search (content: string): Promise<Food> {
+  public async search (content: string, args: PaginationAndOrderBy): Promise<Food> {
     if (isEmpty(content)) throw new HttpError(400, '参数不能为空')
-
-    const data: Food[] = await db.food.findMany({
+    const opts = {
       where: {
         isDeleted: false,
         name: {
@@ -41,8 +41,12 @@ export default class FoodService {
           search: content
         }
       }
-    })
+    }
+    const count = await db.food.count(opts)
+    handlePaginationAndOrderArgs(args, opts)
+    console.log(opts)
+    const data = await db.food.findMany(opts)
 
-    return data
+    return { entities: data, count }
   }
 }

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsPhoneNumber } from 'class-validator'
+import { IsString, IsOptional, IsPhoneNumber, ValidateIf, IsNumberString } from 'class-validator'
 import { Address } from '@/types/interfaces/address.interface'
 
 export class UserDto {
@@ -22,4 +22,22 @@ export class LoginDto {
 
   @IsString()
   public password: string;
+}
+
+export class UserQueryDto {
+  @IsString()
+  content: string;
+
+  @IsNumberString()
+  @IsOptional()
+  page: String;
+
+  @IsNumberString()
+  @IsOptional()
+  size: String;
+
+  @IsString()
+  @ValidateIf(o => o.orderby && o.orderby.includes(':'))
+  @IsOptional()
+  orderby: String;
 }

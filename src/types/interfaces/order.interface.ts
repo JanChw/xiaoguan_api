@@ -16,3 +16,15 @@ export interface Order {
 
   userId: number;
 }
+
+export interface OrderQuery {
+  code?: string;
+
+  status?: PaymentStatus;
+
+  page?: string | number;
+
+  size?: string | number;
+
+  orderby?: string
+}

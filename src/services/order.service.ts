@@ -1,13 +1,12 @@
 import db from '@/db'
-import CRUD from '@/decorators/crud.decorator'
+import CRUD, { handlePaginationAndOrderArgs } from '@/decorators/crud.decorator'
 import { Cart } from '@/types/interfaces/cart.interface'
-import { Order } from '@/types/interfaces/order.interface'
+import { Order, OrderQuery } from '@/types/interfaces/order.interface'
 import { isEmpty } from '@/utils/util'
 import { HttpError } from 'routing-controllers'
 import { CartService } from './cart.service'
 import { ItemStatus } from '@/types/enums/cartItem.enum'
 import { Decimal } from '@prisma/client/runtime'
-import { OrderQueryDto } from '@/types/dtos/order.dto'
 
 @CRUD('order')
 export class OrderService {
@@ -53,20 +52,33 @@ export class OrderService {
     return order
   }
 
-  public async search (query: OrderQueryDto): Promise<Order[] > {
+  public async search (query: OrderQuery): Promise<{entities: any, count: number} > {
     if (isEmpty(query)) throw new HttpError(400, '参数不能为空')
-    const include = { products: true }
 
-    const { code, status } = query
-    const where = {}
+    return await this._search(query)
+  }
 
-    code && Object.assign(where, { code: { contains: code } })
+  public async getAllOrder (): Promise<{entities: any, count: number} > {
+    return await this._search({})
+  }
 
-    status && Object.assign(where, { status })
+  public async _search (query: OrderQuery): Promise<{ entities: any, count:number} > {
+    // if (isEmpty(query)) throw new HttpError(400, '参数不能为空')
 
-    console.log(where)
+    const { code, status, ..._query } = query
+    const condition = { where: {}, include: { products: true } }
 
-    return await db.order.findMany({ where, include })
+    code && Object.assign(condition.where, { code: { contains: code } })
+
+    status && Object.assign(condition.where, { status })
+
+    const count = await db.order.count({ where: condition.where })
+
+    handlePaginationAndOrderArgs(_query, condition)
+
+    const entities = await db.order.findMany(condition)
+
+    return { entities, count }
   }
 
   async getAllOrderByUserId (userId: number) {

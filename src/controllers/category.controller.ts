@@ -21,22 +21,15 @@ export class CategoryController {
   @Get('/categories/foods')
   @OpenAPI({ summary: 'get a list of category' })
   async getFoodsByCategory (@QueryParams() queryData: PaginationAndOrderByDto) {
-    const data = await this.categoryService.getFoodsByCategory(queryData)
+    const data = await this.categoryService.getRelationsBy(queryData)('foods')
     return { data, message: 'get a list of category' }
   }
-
-  // TODO:关联数据分页
-  // @Get('/category/:id/foods')
-  // @OpenAPI({ summary: 'get a category by id' })
-  // async getOne (@Param('id') id: number) {
-  //   const data: Category = await this.categoryService.getOneById(id, { include: { foods: true } })
-  //   return { data, message: 'get a category by id' }
-  // }
 
   @Get('/category/:id/foods')
   @OpenAPI({ summary: 'get a category by id' })
   async getOne (@Param('id') id: number, @QueryParams() queryData: PaginationAndOrderByDto) {
-    const data = await this.categoryService.getFoodsOfCategory(id, queryData)
+    // const data = await this.categoryService.getFoodsOfCategory(id, queryData)
+    const data = await this.categoryService.getRelationsOf(queryData)(id, 'foods')
     return { data, message: 'get a category by id' }
   }
 

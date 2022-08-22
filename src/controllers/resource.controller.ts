@@ -1,9 +1,10 @@
 import { AddPermssion } from '@/decorators/permission.decorator'
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { ResourceService } from '@/services/resource.service'
+import { PaginationAndOrderByDto } from '@/types/dtos/common.dto'
 import { ResourceDto } from '@/types/dtos/resource.dto'
 import { Resource } from '@/types/interfaces/resource.interface'
-import { Body, Controller, Delete, Get, Param, Post, Put, UseBefore } from 'routing-controllers'
+import { Body, Controller, Delete, Get, Param, Post, Put, QueryParams, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { ResourceType } from '../types/enums/resource.enum'
 
@@ -13,19 +14,19 @@ export class ResourceController {
 
   @Get('/permissions')
   @OpenAPI({ summary: 'get all permissions' })
-  async getAllPermissions () {
+  async getAllPermissions (@QueryParams() queryData: PaginationAndOrderByDto) {
     const opts = {
       where: { type: ResourceType.ACTION_BUTTON },
       select: { permission: true }
     }
-    const data: Array<string> = await this.resourceService.getAll(opts)
+    const data: Array<string> = await this.resourceService.getAllWithPagination(queryData)(opts)
     return { data, message: 'list all permissions' }
   }
 
   @Get('/resources')
   @OpenAPI({ summary: 'list resources' })
-  async getAllResources () {
-    const data: Resource[] = await this.resourceService.getAll()
+  async getAllResources (@QueryParams() queryData: PaginationAndOrderByDto) {
+    const data: Resource[] = await this.resourceService.getAllWithPagination(queryData)()
     return { data, message: 'list resources' }
   }
 
