@@ -15,12 +15,13 @@ POST {{ baseURL }}/banner
 Content-Type: application/json
 
 {
- "name": "广告9",
+ "name": "adv106",
+ "title": "广告106",
  "links": {
   "baidu": "http://www.baidu.com",
   "google": "http://www.google.com"
   },
-  "imgs": [36, 37]
+  "imgs": [1, 2,3,4,5]
 }
 
 ###

@@ -21,7 +21,22 @@ export interface Food {
 
   saleType?: SaleType;
 
+  isDeleted: boolean;
+
   images?: File[]
+}
+
+export interface FoodQuery {
+
+  isDeleted: boolean;
+
+  content: string;
+
+  page: string;
+
+  size: string;
+
+  orderby: string;
 }
 
 export interface FoodPartial {

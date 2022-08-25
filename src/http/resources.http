@@ -6,8 +6,12 @@
 GET {{ baseURL }}/resources
 
 ###
+# Find All resources
+GET {{ baseURL }}/permissions
+
+###
 # Find User By Id
-GET {{ baseURL }}/resources/1
+GET {{ baseURL }}/resource/1
 
 ###
 # Create resource

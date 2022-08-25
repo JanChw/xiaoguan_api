@@ -1,4 +1,4 @@
-import { Controller, Param, Body, Get, Post, Put, Delete, UseBefore, QueryParam, BodyParam, QueryParams, Authorized } from 'routing-controllers'
+import { Controller, Param, Body, Get, Post, Put, Delete, UseBefore, BodyParam, QueryParams, Authorized } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 import { BatchUpdateFoodsDto, FoodDto, FoodQueryDto } from '@/types/dtos/food.dto'
 import { Food } from '@/types/interfaces/food.interface'
@@ -31,7 +31,7 @@ export class FoodController {
       return { data, message: 'search' }
     }
 
-    const data = await this.foodService.getAll({
+    const data = await this.foodService.getAllWithPagination(_queryData)({
       where: { isDeleted: false }
     })
     return { data, message: 'search' }
@@ -40,7 +40,7 @@ export class FoodController {
   @Get('/food/:id')
   @OpenAPI({ summary: 'Return find a food' })
   @AddPermssion('查找商品', 'food:find')
-  @Authorized('food:find')
+  // @Authorized('food:find')
   async getFoodById (@Param('id') id: number) {
     const food: Food = await this.foodService.getOneById(id, {
       include: { specs: true }
@@ -52,7 +52,7 @@ export class FoodController {
   @UseBefore(validationMiddleware(FoodDto, 'body'))
   @OpenAPI({ summary: 'Create a new Food' })
   @AddPermssion('创建食品', 'food:create')
-  @Authorized('food:create')
+  // @Authorized('food:create')
   async createUser (@Body() foodData: FoodDto) {
     const food: Food = await this.foodService.createFood(foodData)
     return { data: food, message: 'created' }
@@ -62,7 +62,7 @@ export class FoodController {
   @UseBefore(validationMiddleware(BatchUpdateFoodsDto, 'body'))
   @OpenAPI({ summary: 'Update a food' })
   @AddPermssion('批量更新食品', 'food:updates')
-  @Authorized('food:updates')
+  // @Authorized('food:updates')
   async updateFoods (@Body() batchUpdateFoods: BatchUpdateFoodsDto) {
     const { ids, payload } = batchUpdateFoods
     const foods: Food[] = await this.foodService.updates(ids, payload)
@@ -73,7 +73,7 @@ export class FoodController {
   @UseBefore(validationMiddleware(FoodDto, 'body', true))
   @OpenAPI({ summary: 'Update a food' })
   @AddPermssion('更新食品', 'food:update')
-  @Authorized('food:update')
+  // @Authorized('food:update')
   async updateFood (@Param('id') id: number, @Body() foodData: Partial<FoodDto>) {
     const food: Food = await this.foodService.update(id, foodData)
     console.log(foodData)

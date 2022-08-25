@@ -14,11 +14,11 @@ model user {
   name        String?
   password    String
   phone String  @unique
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
   addresses   address[]
   cart cart?
   orders order[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }
@@ -29,9 +29,9 @@ model staff {
   password    String
   phone String  @unique
   isCopartner  Boolean @default(false)
+  roles role[]
   hireDate   DateTime @default(now())
   leaveDate DateTime?
-  roles role[]
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("staffs")
@@ -173,9 +173,9 @@ model bucket {
   id        Int      @id @unique @default(autoincrement())
   name      String   @unique
   isDefault Boolean @default(false)
+  files     file[]
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  files     file[]
 
   @@map("buckets")
 }
@@ -187,14 +187,13 @@ model file {
   isCollected Boolean @default(false)
   url        String
   fileType   Media    @map("file_type")
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
   bucketId   Int
   bucket     bucket   @relation(fields: [bucketId], references: [id])
   banners banner[]
   foodId     Int?
   food       food? @relation(fields: [foodId], references: [id])
-  
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("files")
 }
@@ -206,6 +205,8 @@ model banner {
   title String?   @default("")
   desc String? @default("")
   imgs file[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("banners")
 }

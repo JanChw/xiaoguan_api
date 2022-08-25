@@ -15,27 +15,35 @@ function MinioStorage () {
 MinioStorage.prototype._handleFile = function _handleFile (req, file, cb) {
   const bucketname = req.params.bucketname
   this.getDestination(req, file, async function (err) {
-    if (err) return cb(err)
+    try {
+      if (err) return cb(req.next(err))
 
-    const bucket = await bucketService.findBucketByName(bucketname)
-    if (!bucket) return cb(new Error('bucket not found'))
+      const bucket = await bucketService.findBucketByName(bucketname)
+      if (!bucket) throw new Error('bucket not found')
 
-    const filename = generateFilename()
-    file.filename = filename
+      const filename = generateFilename()
+      file.filename = filename
 
-    // 图片的压缩在浏览器端处理
-    // const data = await convertToWebpOrAvif(file.stream)
-    const objInfo = await putObject(bucketname, filename, file.stream)
-    cb(null, { ...objInfo, filename })
+      // 图片的压缩在浏览器端处理
+      // const data = await convertToWebpOrAvif(file.stream)
+      const objInfo = await putObject(bucketname, filename, file.stream)
+      cb(null, { ...objInfo, filename })
+    } catch (error) {
+      cb(req.next(new Error(error.message)))
+    }
   })
 }
 
 MinioStorage.prototype._removeFile = async function _removeFile (req, file, cb) {
-  const bucketname = req.params.bucketname
-  const bucket = await bucketService.findBucketByName(bucketname)
-  if (!bucket) return cb(new Error('bucket not found'))
+  try {
+    const bucketname = req.params.bucketname
+    const bucket = await bucketService.findBucketByName(bucketname)
+    if (!bucket) throw new Error('bucket not found')
 
-  await removeObject(bucketname, file.filename, cb)
+    await removeObject(bucketname, file.filename, cb)
+  } catch (error) {
+    cb(req.next(new Error(error.message)))
+  }
 }
 
 export default function () {

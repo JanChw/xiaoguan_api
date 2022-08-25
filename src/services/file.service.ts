@@ -11,11 +11,12 @@ import { Media } from '@/types/enums/file.enum'
 import { BucketService } from './bucket.service'
 import { request } from 'undici'
 import { handlePaginationAndOrderArgs } from '@/decorators/crud.decorator'
+import { ResultWithCount } from '@/types/interfaces/common.interface'
 
 export class FileService {
   public bucketService: BucketService = new BucketService()
 
-  async findFiles (opts?: SearchFileOption): Promise<File[]> {
+  async findFiles (opts?: SearchFileOption): Promise<ResultWithCount> {
     const { page, size, orderby, ..._opts } = opts || {}
     const { bucketname, originName, isCollected, fileType } = _opts
     const condition = { where: {} }
@@ -42,9 +43,9 @@ export class FileService {
 
     handlePaginationAndOrderArgs({ page, size, orderby }, condition)
 
-    const files: File[] = await db.file.findMany(condition)
+    const files = await db.file.findMany(condition)
 
-    return { entries: files, count }
+    return { entities: files, count }
   }
 
   async updateFile (id: number, fileData: FileOptionalInfoDto) {
@@ -84,6 +85,7 @@ export class FileService {
   }
 
   async uploadFiles (bucketname: string, filesData: any): Promise<File[]> {
+    console.log(filesData)
     if (isEmpty(bucketname) || isEmpty(filesData)) throw new HttpError(400, '传入参数都不能为空......')
 
     const bucket: Bucket = await db.bucket.findFirst({ where: { name: bucketname } })

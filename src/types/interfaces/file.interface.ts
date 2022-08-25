@@ -1,7 +1,7 @@
 import { Media } from '@/types/enums/file.enum'
 
 export interface File {
-  id: number;
+  id?: number;
   filename: string;
   originName: string;
   fileType: Media

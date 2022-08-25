@@ -1,12 +1,13 @@
 import { validationMiddleware } from '@/middlewares/validation.middleware'
 import { BannerService } from '@/services/banner.service'
-import { BannerDto } from '@/types/dtos/banner.dto'
+import { BannerDto, BannerQueryDto } from '@/types/dtos/banner.dto'
 import { PaginationAndOrderByDto } from '@/types/dtos/common.dto'
 import { Banner } from '@/types/interfaces/banner.interface'
 import { ResultWithCount } from '@/types/interfaces/common.interface'
 import { Body, BodyParam, Controller, Delete, Get, Param, Post, Put, QueryParams, UseBefore } from 'routing-controllers'
 import { OpenAPI } from 'routing-controllers-openapi'
 
+// TODO:添加search
 @Controller()
 export class BannersController {
   public bannerService = new BannerService()
@@ -18,6 +19,19 @@ export class BannersController {
       include: { imgs: true }
     })
     return { data, message: 'list banner' }
+  }
+
+  @Get('/banners/search')
+  @OpenAPI({ summary: 'Return a list of banners by search' })
+  async searchBanner (@QueryParams() queryData: BannerQueryDto) {
+    const { content, ..._queryData } = queryData
+    if (content) {
+      const data = await this.bannerService.search(content, _queryData)
+      return { data, message: 'search' }
+    }
+
+    const data = await this.bannerService.getAllWithPagination(_queryData)()
+    return { data, message: 'search' }
   }
 
   @Get('/banner/:id')

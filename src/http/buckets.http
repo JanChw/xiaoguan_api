@@ -15,11 +15,11 @@ GET {{ baseURL }}/buckets/1
 
 ###
 # Create bucket
-POST {{ baseURL }}/buckets
+POST {{ baseURL }}/bucket
 Content-Type: application/json
 
 {
- "name": "blog"
+ "name": "test"
 }
 
 ###

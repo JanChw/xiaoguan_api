@@ -26,7 +26,7 @@ export class FileController {
     return { data: file, message: 'update a file' }
   }
 
-  @Post('/files/uploads/:bucketname')
+  @Post('/files/upload/:bucketname')
   @HttpCode(201)
   @OpenAPI({ summary: 'Upload many files' })
   async uploadFiles (@Param('bucketname') bucketname: string, @UploadedFiles('file', { options: { storage: MinioStroage() } }) filesData: any) {

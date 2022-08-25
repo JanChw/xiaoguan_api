@@ -13,7 +13,7 @@ export class BucketService {
       where: { name: bucketName }
     })
 
-    if (!bucket) { throw new NotFoundError('bucket not found') }
+    if (!bucket) throw new NotFoundError('bucket not found')
 
     return bucket
   }

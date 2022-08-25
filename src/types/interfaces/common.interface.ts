@@ -13,6 +13,6 @@ export interface PaginationAndOrderBy {
 }
 
 export interface ResultWithCount {
-  entries?: any[],
+  entities?: any[],
   count?: number
 }

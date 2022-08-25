@@ -1,11 +1,10 @@
 import db from '../db'
-// import { HttpException } from '@exceptions/HttpException'
-import { Food } from '../types/interfaces/food.interface'
+import { Food, FoodQuery } from '../types/interfaces/food.interface'
 import { FoodDto } from '@/types/dtos/food.dto'
 import { isEmpty } from '@utils/util'
 import CRUD, { handlePaginationAndOrderArgs } from '@/decorators/crud.decorator'
 import { HttpError } from 'routing-controllers'
-import { PaginationAndOrderBy } from '@/types/interfaces/common.interface'
+import { ResultWithCount } from '@/types/interfaces/common.interface'
 
 @CRUD('food')
 export default class FoodService {
@@ -26,11 +25,12 @@ export default class FoodService {
     return _food
   }
 
-  public async search (content: string, args: PaginationAndOrderBy): Promise<Food> {
+  public async search (content: string, args: FoodQuery): Promise<ResultWithCount> {
     if (isEmpty(content)) throw new HttpError(400, '参数不能为空')
+    const { isDeleted, ..._args } = args
     const opts = {
       where: {
-        isDeleted: false,
+        isDeleted,
         name: {
           search: content
         },
@@ -43,8 +43,8 @@ export default class FoodService {
       }
     }
     const count = await db.food.count(opts)
-    handlePaginationAndOrderArgs(args, opts)
-    console.log(opts)
+    handlePaginationAndOrderArgs(_args, opts)
+
     const data = await db.food.findMany(opts)
 
     return { entities: data, count }
